@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- reset css -->
+  <link rel="stylesheet" href="/css/reset.css">
+  <!--共有の -->
+
+  <!-- 共通 css -->
+  <link rel="stylesheet" href="/css/common.css">
+  <!--共有の -->
+
+  <!-- fontawesome -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
+
+  <title>データ分析PDF出力 pdf</title>
+
+  <!-- ページ内スタイル -->
+  <style>
+    main {
+      margin: 120px auto 0 auto;
+      max-width: 1000px;
+      min-width: 350px;
+      width: 80%;
+      min-height: 90vh;
+      font-size: 1.6rem;
+    }
+
+    .form_wrap {
+      margin: 24px 0 12px 0;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .form_wrap h2 {
+      font-size: 1.8rem;
+    }
+
+    .form_wrap button {
+      margin: 16px 0;
+      width: 100%;
+      background-color: #7698C5;
+    }
+
+    .pdf_output {
+      margin-bottom: 40px;
+      padding: 40px;
+      width: 100%;
+      background-color: white;
+      border-radius: 20px;
+      border: 1px solid #707070;
+    }
+
+    .pdf_output img {
+      margin-top: 24px;
+      width: 90%;
+      height: auto;
+    }
+  </style>
+</head>
+
+<!-- --------------------------body---------------------------------------------------------------------------- -->
+
+<body>
+
+  <!-- ---header -->
+  <header>
+    <h1>
+      <a href="/admin">
+        <span class="header-logo">HAL CHINEMA</span>
+        <span class="header-address">NAGOYA</span>
+      </a>
+    </h1>
+    <div>
+      <img src="/images/menu.png" alt="menu" onclick="menuFadeIn()">
+    </div>
+  </header>
+
+  <!-- menu -->
+  <article class="menu" id="menu">
+    <h2>MENU</h2>
+    <ul>
+      <li><a href="/admin" class="link">ホーム</a></li>
+      <li><a href="/admin/mail" class="link">メール作成</a></li>
+      <li><a href="/admin/pdf" class="link">データ分析</a></li>
+      <li><a href="/admin/production_list" class="link">登録映画一覧</a></li>
+      <li><a href="/admin/production_add" class="link">映画追加</a></li>
+      <li class="menu-logout">ログアウト</li>
+    </ul>
+    <img src="/images/menu_close.png" alt="メニュークローズアイコン" class="menu-close" onclick="menuFadeOut()">
+  </article>
+
+
+  <!-- ---main -->
+  <main>
+    <!-- パンくずリスト -->
+    <p>
+      <a class="link" href="/admin">HOME</a>
+      <span class="link-partition">＞</span>
+      <a class="link" href="/admin/pdf">データ分析</a>
+    </p>
+    <section class="form_wrap">
+      <h2>1上映あたりの視聴回数</h2>
+      <p>
+        <select>
+          <option value="" disabled selected>---</option>
+          <option value="age">年代</option>
+          <option value="gender">性別</option>
+          <option value="time">時間</option>
+          <option value="area">地域</option>
+        </select>
+        <span>毎に分割</span>
+      </p>
+      <button>PDF出力実行</button>
+    </section>
+    <!-- たかしくんお任せ枠作りやすいようにデータ分析画面は作って! -->
+    <section class="pdf_output">
+      <h2>1上映あたり視聴回数<span>(性別毎)</span></h2>
+      <img src="/images/pdf_ex.png" alt="画面出力例">
+    </section>
+
+  </main>
+
+  <!-- ---footer -->
+  <footer onclick="scrollToTop()">
+    <img src="/images/arrow.png" alt="上矢印アイコン">
+    <p>Back top</p>
+  </footer>
+
+
+
+  <!-- orinal javascript file -->
+  <script src="/js/common.js"></script>
+</body>
+
+</html>
