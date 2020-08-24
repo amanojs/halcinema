@@ -10,12 +10,13 @@ const localStrategy = () => {
     passwordField: "password"
   }, (username, password, done) => {
     (async function () {
-      const sql = "SELECT * FROM user WHERE email = ?"
-      db.query(sql, [username], (err, result) => {
+      const sql = "SELECT * FROM user WHERE email = ? AND pass = ?;"
+      db.query(sql, [username, password], (err, result) => {
         if (err) {
           debug(err)
         }
-        debug(result[0])
+        debug(result)
+        if (!result.length) return done(null, false)
         const [account] = result
         const userData = new User({ email: account.email, role: account.role })
         done(null, userData)

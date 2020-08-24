@@ -28,10 +28,17 @@ app.use(session({
 }));
 require("./src/config/passport")(app)
 
+app.get("/", (req, res) => {
+    res.render("user/index")
+})
+
 // routing setup
 const apiRouter = require("./src/routes/apiRoutes")()
 const authRouter = require("./src/routes/authRoutes")()
 const adminRouter = require("./src/routes/adminRoutes")()
+const homeRouter = require("./src/routes/user/homeRouter")()
+const productionRouter = require("./src/routes/user/productionRoutes")()
+const usersRouter = require("./src/routes/user/usersRoutes")()
 
 app.use("/api", apiRouter)
 app.use("/auth", authRouter)
@@ -46,10 +53,9 @@ app.use("/admin", (req, res, next) => {
     }
     res.redirect("/admin/login")
 }, adminRouter)
-
-app.get("/", (req, res) => {
-    res.send("hello halcinema")
-})
+app.use("/home", homeRouter)
+app.use("/production", productionRouter)
+app.use("/users", usersRouter)
 
 app.listen(PORT, () => {
     debug(`server listen on ${chalk.yellow(PORT)} PORT.

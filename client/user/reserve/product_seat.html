@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+
+<head>
+
+	<meta charset="utf-8">
+
+	<title>座席予約ページ</title>
+
+	<link rel="stylesheet" href="../css/reset.css">
+	<link rel="stylesheet" href="../css/common.css">
+	<link rel="stylesheet" href="../css/production_seat.css">
+
+</head>
+
+<body>
+
+	<header>
+		<div id="halcinema">
+			<img src="../images/logo_white.png" alt="ロゴ白">
+			<h1>HAL CINEMA</h1>
+		</div>
+		<button id="pan" onclick="location.href='/'">＜地域選択画面</button>
+	</header>
+
+
+	<div id="wrap">
+
+		<p id="pan2" onclick="location.href='../production/production_content.html'">＜　作品詳細画面に戻る</p>
+
+		<article>
+			<!-- ここから編集 -->
+
+			<section id="seat_cont">
+				<div id="top_cont">
+					<div id="left_cont">
+						<p id="time">06/06 9:00 <span>~ 11:00</span></p>
+						<h2>『映画ドラえもん　のび太の月面探査記』</h2>
+					</div>
+					<div id="right_cont">
+						<div class="float">空席</div>
+						<div id="kuseki"></div>
+						<div class="float">満席</div>
+						<div id="manseki"></div>
+						<div class="float">選択</div>
+						<div id="sentaku">✓</div>
+					</div>
+				</div>
+				<img id="screen" src="../images/screen.png" alt="スクリーン">
+
+				<div id="seat_area">
+					<div class="kuseki"></div>
+					<div class="manseki"></div>
+					<div class="sentaku">✓</div>
+				</div>
+
+				<button id="next" onclick="location.href='../reserve/credit.html'">選択座席で予約する　▶</button>
+			</section>
+
+			<!-- ここまでを編集 -->
+		</article>
+
+
+	</div>
+
+
+
+	<footer id="copyRight">
+		<small>&copy; HAL CINEMA 2020.</small>
+	</footer>
+
+
+
+</body>
+
+</html>

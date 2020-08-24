@@ -1,297 +1,278 @@
 @charset "utf-8";
 
 /* 共通のスタイル */
-*{
-  box-sizing: border-box;
-}
 html{
-  font-size: 62.5%;
+    font-family: "游ゴシック体", YuGothic, "游ゴシック", "Yu Gothic", sans-serif;
+    font-weight: 600;
 }
 body{
-  background-color: #fafafa;
-  color: #707070;
+    width: 100%;
+    height: auto;
+    background-color: #fafafa;
 }
-
-/*------------- css----------*/
-/* ---text color ----------*/
-.attention-color{
-  color: #C5767C;
-}
-.primary-color{
-  color: #7698C5;
-}
-/* ---button ----------*/
-button{
-  font-weight: bold;
-  height: 40px;
-  border-radius: 20px;
-  color: #fff;
-  background-color: #aaa;
-  border-style: none;
-  transition: opacity .3s;
-  cursor: pointer;
-}
-button:hover{
-  opacity: .7;
-}
-.button{
-  display: inline-block;
-  font-weight: bold;
-  height: 40px;
-  line-height: 40px;
-  border-radius: 20px;
-  color: #fff;
-  background-color: #aaa;
-  border-style: none;
-  transition: opacity .3s;
-  cursor: pointer;
-}
-.button:hover{
-  opacity: .7;
-}
-
-/* ---modal ----------*/
-.modal-black{
-  /* 最初は非表示 */
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color:rgba(0, 0, 0, 0.6);
-}
-.modal-white{
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%,-50%);
-  background-color: #fafafa;
-  width: 70%;
-  min-width: 350px;
-  max-width: 520px;
-  height: 280px;
-  border-radius: 20px;
-  text-align: center;
-}
-
-.modal-white h3{
-  margin-top: 80px;
-  font-size: 1.6rem;
-}
-.modal-white p{
-  margin: 16px 0;
-  font-size: 1.2rem;
-}
-.modal-white button,.modal-white .button{
-  margin-top: 40px;
-  width: 140px;
-  font-size: 1.6rem;
-}
-.modal_submit{
-  background-color: #C5767C;
-  margin-left: 12px;
-}
-
-/* ---a(link) ----------*/
-a:link{color: white; text-decoration: none;}
-a:visited{color: white; text-decoration: none;}
-a:active{color: #eee;}
-.link:link{
-  color: #aaa; 
-  text-decoration: none; 
-  cursor: pointer; 
-  transition: color .3s;
-}
-.link:visited{
-  color: #aaa; 
-  text-decoration: none; 
-  cursor: pointer; 
-  transition: color .3s;
-}
-.link:hover{color: #777;}
-.link:active{color: #aaa;}
-.link-partition{color: #aaa;}
-
-/* ---header ----------*/
 header{
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 100;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  padding: 0 28px;
-  height: 80px;
-  background-color: #fff;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    height: 80px;
+    color: white;
+    background-color: #333;
+
+    display: flex;
+    justify-content: flex-start;
 }
-header a{
-  color: #fafafa;
-  text-shadow: 0 2px 3px #ccc;
-  text-decoration: none;
-  transition: text-shadow .3s;
-}
-header a:hover{
-  text-shadow: 0 2px 6px #bbb;
-}
-.header-logo{
-  font-size: 3.2rem;
-}
-.header-address{
-  font-size: 4rem;
-}
-header img{
-  transition: opacity .5s;
-  cursor: pointer;
-}
-header img:hover{
-  opacity: .4;
-}
-/* --header内 MENU */
-.menu{
-  display: none;
-  position: fixed;
-  z-index: 100;
-  top: 0;
-  left: 0;
-  width: 100%;
-  background-color: #fff;
-  text-align: center;
-  font-size: 1.6rem;
-}
-.menu-close{
-  position: absolute;
-  top: 20px;
-  right: 24px;
-  cursor: pointer;
-  transition: opacity .3s;
-}
-.menu-close:hover{
-  opacity: .7;
-}
-.menu h2{
-  height: 80px;
-  line-height: 80px;
-  border: 1px solid #ccc;
-}
-.menu ul{
-  list-style: none;
-}
-.menu a{
-  display: inline-block;
-  width: 100%;
-  height: 60px;
-  line-height: 60px;
-  border: 1px solid #eee;
-}
-.menu a:hover{
-  background-color: #f0f0f0;
-  font-weight: bold;
-}
-.menu-logout{
-  display: inline-block;
-  width: 100%;
-  height: 60px;
-  line-height: 60px;
-  border: 1px solid #eee;
-  color: #aaa;
-  cursor: pointer;
-  transition: background-color .3s,
-  color .3s,
-  font-weight .3s;
-}
-.menu-logout:hover{
-  background-color: #f0f0f0;
-  color: #707070;
-  font-weight: bold;
-}
-/* ---footer ----------*/
-footer{
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 40px;
-  background-color: #333;
-  color: white;
-  cursor: pointer;
-  transition: opacity .3s;
-}
-footer:hover{
-  opacity: .7;
-}
-footer img{
-  width: 30px;
-  height: auto;
-  margin-bottom: 2px;
+    div#halcinema{
+        width: 210px;
+        height: 36px;
+        margin: 10px 0 0 15px;
+
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+        div#halcinema img{
+            width: 36px;
+            height: 36px;
+        }
+        div#halcinema h1{
+            font-size: 24px;
+        }
+    header button#pan{
+        width: 100px;
+        height: 20px;
+        font-size: 14px;
+        font-weight: 400;
+        color: #fff;
+        cursor: pointer;
+    
+        position: absolute;
+        top: 50px; left: 125px;
+    }
+    header a#login{
+        height: 80px;
+        line-height: 80px;
+        color: #fff;
+        font-size: 20px;
+        margin-right: 72px;
+        cursor: pointer;
+    }
+    header a#login:hover{
+        transition: 0.5s;
+        opacity: 0.7;
+    }
+    header a#user{
+        display: inline-flex;
+        width: 120px;
+        height: 50px;
+        color: #555;
+        font-size: 14px;
+        font-weight: 500;
+        margin-top: 15px;
+        margin-right: 15px;
+        cursor: pointer;
+
+        position: relative;
+    }
+    header a#user:hover{
+        transition: 0.5s;
+        opacity: 0.7;
+    }
+        header a#user img{
+            width: 50px;
+            height: 50px;
+            color: #fff;
+
+            position: absolute;
+            left: 0;
+            z-index: 2;
+        }
+        header a#user div{
+            width: 85px;
+            height: 40px;
+            background-color: #fff;
+
+            position: absolute;
+            top: 5px; right: 0;
+            z-index: 1;
+        }
+        p#ticket{
+            position: absolute;
+            left: 20px; top: 5px;
+        }
+        p#profile{
+            position: absolute;
+            right: 5px; bottom: 5px;
+        }
+    header a:last-of-type{
+        margin-left: auto;
+    }
+
+
+#wrap{
+	width: 1280px;
+	height: auto;
+	margin: 0 auto;
 }
 
-/* ---production 映画詳細・追加・編集 ----------*/
+#pan:hover{
+    transition: 0.5s;
+    opacity: 0.7;
+}
+ul{
+    display: flex;
+    justify-content: center;
+    margin: 63px;
+}
+    .schedule_style, .li_style{
+        width: 280px;
+        height: 40px;
+        color: #aaa;
+        letter-spacing: 1px;
+        text-align: center;
+        font-size: 16px;
+        background-color: #fff;
+        box-shadow: 0px 4px 0 #ddd;
+        border: 0.5px solid #ddd;
+        cursor: pointer;
+    }
+    .schedule_style:hover, 
+    .li_style:hover{
+        transition: 0.5s;
+        color: #777;
+        box-shadow: 0px 4px 0 #7698C5;
+    }
+	.schedule_style{
+		position: relative;
+	}
+	.li_style{
+		line-height: 40px;
+	}
+    .nav_active{
+        color: #777;
+        box-shadow: 0px 4px 0 #7698C5;
+    }
+		#when{
+			width: 30px;
+			height: 20px;
+			margin: 0 0 0 30px;
+			background-image: url("../images/day_line.png");
+			background-position: center;
+			background-size: 20px 20px;
+			background-repeat: no-repeat;
 
-.production-main{
-  margin: 130px auto 20px auto;
-  width: 90%;
-  max-width: 1200px;
-  min-width: 350px;
-  min-height: 800px;
-  font-size: 1.4rem;
-}
-.production-main h2{
-  font-size: 1.6rem;
-}
-.product-pankuzu{
-  margin-bottom: 24px;
-}
-.product-block{
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
-}
-.product-sec{
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  padding: 28px 32px;
-  width: 350px;
-  min-height: 640px;
-  background-color: white;
-  box-shadow: 2px 4px 8px #ddd;
-}
-.product-sec input,textarea{
-  padding: 4px 8px;
-  line-height: 1.4;
-}
-.product-sec textarea{
-  margin-top: 8px;
-}
-.product-sec input::placeholder,textarea::placeholder{
-  color: #ccc;
-}
-.product-clock{
-  width: 20px;
-  height: 20px;
-}
-.product-poster{
-  width: 240px;
-  height: 346px;
-  object-fit: cover;
+			position: absolute;
+			top: 10px;
+		}
+			#month, #day{
+				width: auto;
+				height: 10px;
+				font-size: 10px;
 
+				position: absolute;
+			}
+			#month{
+				top: 0; left: 0;
+			}
+			#day{
+				right: 0; bottom: 0;
+			}
+			#schedule{
+				line-height: 40px;
+            }
+
+         
+
+footer#scrollTop{
+    width: 100%;
+    height: 40px;
+    color: white;
+    font-weight: 400;
+    background-color: #333;
+    cursor: pointer;
+    transition: opacity 0.3s;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
-#preview{
-  cursor: pointer;
-  transition: opacity .3s;
+footer#scrollTop:hover{
+    opacity: 0.7;
 }
-#preview:hover{
-  opacity: .4;
+    footer#scrollTop div{
+        width: 70px;
+    }
+        footer#scrollTop div img{
+            margin-left: 19px;
+        }
+
+small{
+    display: block;
+    width: 100%;
+    height: auto;
+    margin: 50px 0;
+    text-align: center;
+    font-size: 12px;
+    color: #999; 
+    font-weight: 400;
+}
+           
+
+footer#copyRight{
+    width: 100%;
+    height: 40px;
+    line-height: 40px;
+    background-color: #333;
+
+    position: fixed;
+    bottom: 0;
+}
+    footer#copyRight small{
+        margin: 0;
+    }
+
+/* スタイルリセット */
+a{
+    text-decoration: none;
+}
+input[type='button'],
+input[type='text'],
+input[type='password'],
+input[type='submit']{
+    appearance: none;
+    border-radius: 0;
+    font: inherit;
+    outline: none;
+    background-color: #fafafa;
+    border: 0.5px solid #ddd;
+}
+input[type='text'],
+input[type='password']{
+    padding: 10px;
+    height: 20px;
+}
+input[type='submit'],
+input[type='button']{
+    border: none;
+}
+select{
+    appearance: none;
+    border-radius: 0;
+    color: #777;
+    width: 80px;
+    height: 40px;
+    padding: 10px;
+    background-color: #fafafa;
+    border: 0.5px solid #ddd;
 }
 
-.product-button{
-  min-width: 350px;
+textarea {
+  resize: vertical;
 }
-.product-button button{
-  width: 100%;
-  margin-top: 20px;
+
+button{
+    font-family: "游ゴシック体", YuGothic, "游ゴシック", "Yu Gothic", sans-serif;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    outline: none;
+    padding: 0;
+    appearance: none;
 }

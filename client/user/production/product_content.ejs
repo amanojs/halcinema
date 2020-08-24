@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+
+<head>
+
+	<meta charset="utf-8">
+
+	<title>映画詳細-<%= movieName %>-</title>
+
+	<link rel="stylesheet" href="../css/reset.css">
+	<link rel="stylesheet" href="../css/common.css">
+	<link rel="stylesheet" href="../css/product_content.css">
+
+</head>
+
+<body>
+
+	<header>
+		<div id="halcinema">
+			<img src="../images/logo_white.png" alt="ロゴ白">
+			<h1>HAL CINEMA</h1>
+		</div>
+		<button id="pan" onclick="location.href='/'">＜地域選択画面</button>
+		<a id="login" href="/users/login">Login</a>
+	</header>
+
+
+	<div id="wrap">
+
+		<p id="pan2" onclick="location.href='/home/production_list'">＜　一覧に戻る</p>
+
+		<article>
+			<!-- ここから編集 -->
+
+			<section id="top_cont">
+				<div id="img"><img src="<%= poster %>" alt="<%= poster %>"></div>
+				<div id="right_cont">
+					<div id="time"><img src="../images/time.png" alt="時計">
+						<p>上映<%= runs %>分</p>
+					</div>
+					<div id="title">
+						<h2><%= movieName %></h2>
+						<div id="properties">
+							<p id="rating">レイティング／R<%= rating %>+</p>
+							<p id="director">監督／<%= director %></p>
+						</div>
+					</div>
+					<div id="schedule_cont">
+						<div id="week">
+							<div class="date active">
+								<p>05 / 05(火)</p>
+							</div>
+							<div class="date">
+								<p>05 / 06(水)</p>
+							</div>
+							<div class="date">
+								<p>05 / 07(木)</p>
+							</div>
+							<div class="date">
+								<p>05 / 08(金)</p>
+							</div>
+							<div class="date">
+								<p>05 / 09(土)</p>
+							</div>
+							<div class="date">
+								<p>05 / 10(日)</p>
+							</div>
+							<div class="date">
+								<p>05 / 11(月)</p>
+							</div>
+							<div class="date">
+								<p>05 / 12(火)</p>
+							</div>
+						</div>
+						<div id="time_schedule">
+							<div class="schedule_conts">
+								<p class="time">09 : 25 ～ <span>11:30</span></p>
+								<p class="reserve_btn">座席予約</p>
+							</div>
+							<div class="schedule_conts">
+								<p class="time">11 : 45 ～ <span>13:20</span></p>
+								<p class="end_btn">販売終了</p>
+							</div>
+							<div class="schedule_conts">
+								<p class="time">13 : 35 ～ <span>15:15</span></p>
+								<p class="reserve_btn">座席予約</p>
+							</div>
+							<div class="schedule_conts">
+								<p class="time">15 : 25 ～ <span>17:00</span></p>
+								<p class="end_btn">販売終了</p>
+							</div>
+							<div class="schedule_conts">
+								<p class="time">17 : 20 ～ <span>19:00</span></p>
+								<p class="reserve_btn">座席予約</p>
+							</div>
+							<div class="schedule_conts">
+								<p class="time">19 : 20 ～ <span>21:00</span></p>
+								<p class="end_btn">販売終了</p>
+							</div>
+							<div class="schedule_conts">
+								<p class="time">21 : 20 ～ <span>23:00</span></p>
+								<p class="reserve_btn">座席予約</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+			<section id="bottom_cont">
+				<div>
+					<div id="story">
+						<h3>STORY</h3>
+						<p>
+							<%- explain %>
+						</p>
+					</div>
+					<div id="cast">
+						<h3>CAST</h3>
+						<p><%= cast %></p>
+					</div>
+				</div>
+			</section>
+
+
+			<!-- ここまでを編集 -->
+		</article>
+
+		<small>&copy; HAL CINEMA 2020.</small>
+
+	</div>
+
+
+
+	<footer id="scrollTop" onclick="scrollToTop()">
+		<div>
+			<img src="../images/arrow.png" alt="ScrollTop">
+			<p>Scroll top</p>
+		</div>
+	</footer>
+
+	<script src="/js/common.js"></script>
+
+
+
+</body>
+
+</html>
