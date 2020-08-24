@@ -2,6 +2,7 @@ const express = require("express")
 const db = require("../config/mysql")()
 const debug = require("debug")("app:api")
 const Schedule = require("../models/Schedule")
+const { json } = require("body-parser")
 
 const apiRouter = express.Router()
 
@@ -51,6 +52,27 @@ module.exports = () => {
         throw err
       }
       res.json(result[0])
+    })
+  })
+
+  apiRouter.route("/getCalendar").get((req, res) => {
+    const year = req.query.year
+    const month = req.query.month
+    const min = `${year}-${month}-1`
+    const max = `${year}-${month}-31`
+    const sql = "SELECT runDay FROM schedule WHERE runday >= ? AND runday <= ? GROUP BY runDay;"
+    db.query(sql, [min, max], (err, result) => {
+      if (err) {
+        res.status(504), json()
+        throw err
+      }
+      let resData = []
+      for (let i = 0; i < result.length; i++) {
+        const format = new Date(result[i].runDay).toLocaleDateString()
+        resData = [...resData, format.replace(/-/g, '/')]
+      }
+      debug(resData)
+      res.json(resData)
     })
   })
 
