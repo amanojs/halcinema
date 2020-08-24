@@ -79,12 +79,12 @@
 
     <h1>HAL CHINEMA admin</h1>
 
-    <form action="/admin">
+    <form method="POST" action="/auth/admin">
       <p>User name</p>
-      <input type="text" class="form-text" placeholder="nagoya_tokin">
+      <input type="text" name="username" class="form-text" placeholder="nagoya_tokin">
 
       <p>Password</p>
-      <input type="password" class="form-password" placeholder="●●●●●●●●●●●●">
+      <input type="password" name="password" class="form-password" placeholder="●●●●●●●●●●●●">
 
       <button>Login</button>
     </form>

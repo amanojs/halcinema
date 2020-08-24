@@ -100,20 +100,22 @@
       <a class="link" href="/admin/production_content">映画詳細</a>
     </p>
 
+    <% const Day = new Date(releaseDay);%>
+
     <article class="product-block">
       <section class="product-sec">
         <p>
           <img src="/images/icon_clock.png" alt="時計アイコン" class="product-clock">
-          <span>上映 120分</span>
+          <span>上映 <%= runs %>分</span>
         </p>
-        <h2>心が叫びたがってるんだ</h2>
-        <img src="/images/poster/c06.jpg" alt="心が叫びたがってるんだ" class="product-poster">
-        <p>レイティング / <span>R15+</span></p>
-        <p>監督 / <span>バリー・ウォン、ジェイソン・クワン</span></p>
+        <h2><%= movieName %></h2>
+        <img src="<%= poster %>" alt="<%= movieName %>" class="product-poster">
+        <p>レイティング / <span>R<%= rating %>+</span></p>
+        <p>監督 / <span><%= director %></span></p>
         <p>
-          公開予定日 : 2020年
-          <span class="primary-color procut_release">06</span>月
-          <span class="primary-color procut_release">06</span>日
+          公開予定日 : <%= releaseDay.getFullYear() %>年
+          <span class="primary-color procut_release"><%= Day.getMonth() + 1 %></span>月
+          <span class="primary-color procut_release"><%= Day.getDate() %></span>日
         </p>
       </section>
 
@@ -122,16 +124,12 @@
         <h2>STORY</h2>
         <!-- テキストエリア入力時の改行反映をとりあえずbrタグで代用 -->
         <p class="content_story">
-          「イップ・マン」「ローグ・ワン　スター・ウォーズ・ストーリー」のドニー・イェンと「インファナル・アフェア」「グレートウォール」のアンディ・ラウというアジアの2大スターが共演したクライムドラマ。<br><br>
-          1960年代の香港に実在した香港マフィアのボス、ン・シックホーと警察署長ルイ・ロックをモデルに、汚職が蔓延した警察と彼らとつながっていた黒社会との関係を描き出していく。<br><br>
-          中国の潮州から仕事を求めて香港にやってきたホーは、ヤクザ同士の争いに参加して警察に逮捕されるが、ホーの腕力に目を付けた警察署長のロックに助けられる。そのことに恩を感じたホーは、黒社会でのしあがっていき、今度はその立場からロックを助けるなど、2人は次第に友情で結ばれていくが……。<br><br>
-          主演のドニー・イェン、アンディ・ラウがともに製作も務める。監督は「ゴッド・ギャンブラー」シリーズなどヒット作を多数手がけてきたバリー・ウォンと、「プロジェクト・グーテンベルク　贋札王」「コールド・ウォー　香港警察　堕ちた正義」などの撮影監督を務めてきたジェイソン・クワン。
+          <%- explain %>
         </p>
         <h2>CAST</h2>
         <!-- テキストエリア入力時の改行反映をとりあえずbrタグで代用 -->
         <p class="content_cast">
-          ドニー・イェン　｜　アンディ・ラウ<br>
-          フィリップ・キョン　｜　ケント・チェン
+          <%= cast %>
         </p>
       </section>
 
@@ -148,7 +146,7 @@
       <h3>この映画情報を本当に消去しますか？</h3>
       <p><span class="attention-color">※</span>1度消去した映画は復元できません</p>
       <button onclick="modalFadeOut()">戻る</span>
-        <button class="modal_submit">消去</button>
+        <button class="modal_submit" onclick="delMovie()">消去</button>
     </div>
   </div>
 
@@ -162,6 +160,29 @@
 
   <!-- orinal javascript file -->
   <script src="/js/common.js"></script>
+  <script src="/js/axios.min.js"></script>
+  <script>
+    const delMovie = async () => {
+      const result = await axios.post("/api/delMovie/<%= movieId %>");
+      console.log(result)
+      const modal = document.getElementsByClassName("modal-black")[0]
+      if (result.status === 200) {
+        modal.innerHTML = `
+          <div class="modal-white">
+            <h3>映画情報の消去が完了しました</h3>
+            <button class="modal_submit" onclick="window.location.href = '/admin/production_list/'">完了</button>
+          </div>`
+      } else {
+        modal.innerHTML = `
+          <div class="modal-white">
+            <h3>処理中にエラーが発生しました</h3>
+            <p><span class="attention-color">※</span>数分後にもう一度お試しください</p>
+            <button class="modal_submit" onclick="modalFadeOut()">OK</button>
+          </div>`
+      }
+      modalFadeIn()
+    }
+  </script>
 </body>
 
 </html>

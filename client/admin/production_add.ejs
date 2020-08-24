@@ -68,13 +68,13 @@
       <span class="link-partition">＞</span>
       <a class="link" href="/admin/production_add">映画追加</a>
     </p>
-
-    <form class="product-block">
+    <form class="product-block" action="/admin/production_add" method="POST" enctype="multipart/form-data">
       <section class="product-sec">
+        <p style="color:cadetblue;font-weight: bold;"><%= success ? "アップロードが完了しました":"" %></p>
         <p>
           <img src="/images/icon_clock.png" alt="時計アイコン" class="product-clock">
           <span>上映時間</span>
-          <select required>
+          <select required name="runs">
             <option value="" selected disabled>---</option>
             <option value="60">60</option>
             <option value="70">70</option>
@@ -93,17 +93,17 @@
           <span>分</span>
         </p>
         <h2>
-          <input type="text" placeholder="映画タイトルをここに入力" required size="35">
+          <input type="text" placeholder="映画タイトルをここに入力" required size="35" name="movieName">
         </h2>
         <label for="target"><img src="/images/noSelect_poster.png" alt="フォームポスター画像" class="product-poster"
             id="preview"></label>
         <!-- accept="image/*" 画像ファイル以外はグレーアウト -->
         <!-- このinputをスタイルでdisplay none -->
-        <input type="file" accept="image/*" id="target">
+        <input type="file" accept="image/*" id="target" name="poster">
         <p>
           <span>レイティング / R</span>
-          <select required>
-            <option value="" disabled selected>--</option>
+          <select required name="rating">
+            <option value="0" disabled selected>--</option>
             <option value="12">12</option>
             <option value="15">15</option>
             <option value="18">18</option>
@@ -113,72 +113,11 @@
         </p>
         <p>
           <span>監督 / </span>
-          <input type="text" placeholder="ex)バリーウォン、ジェイソンクワン" size="28" required>
+          <input type="text" placeholder="ex)バリーウォン、ジェイソンクワン" size="28" name="director" required>
         </p>
         <p>
           <span>公開予定日 : </span>
-          <select required>
-            <option value="" selected disabled>----</option>
-            <option value="2020">2020</option>
-            <option value="2021">2021</option>
-            <option value="2022">2022</option>
-            <option value="2023">2023</option>
-            <option value="2024">2024</option>
-            <option value="2025">2025</option>
-            <option value="2026">2026</option>
-          </select>
-          <span> 年 </span>
-          <select required>
-            <option value="" selected disabled>--</option>
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
-            <option value="7">7</option>
-            <option value="8">8</option>
-            <option value="9">9</option>
-            <option value="10">10</option>
-            <option value="11">11</option>
-            <option value="12">12</option>
-          </select>
-          <span> 月 </span>
-          <select required>
-            <option value="" selected disabled>--</option>
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
-            <option value="7">7</option>
-            <option value="8">8</option>
-            <option value="9">9</option>
-            <option value="10">10</option>
-            <option value="11">11</option>
-            <option value="12">12</option>
-            <option value="13">13</option>
-            <option value="14">14</option>
-            <option value="15">15</option>
-            <option value="16">16</option>
-            <option value="17">17</option>
-            <option value="18">18</option>
-            <option value="19">19</option>
-            <option value="20">20</option>
-            <option value="21">21</option>
-            <option value="22">22</option>
-            <option value="23">23</option>
-            <option value="24">24</option>
-            <option value="25">25</option>
-            <option value="26">26</option>
-            <option value="27">27</option>
-            <option value="28">28</option>
-            <option value="29">29</option>
-            <option value="30">30</option>
-            <option value="31">31</option>
-          </select>
-          <span> 日</span>
+          <input type="date" name="releaseDay" id="releaseDay">
         </p>
       </section>
 
@@ -186,20 +125,21 @@
       <section class="product-sec">
         <h2>
           STORY<br>
-          <textarea required cols="36" rows="25" placeholder="ex)「イップ・マン」「ローグ・ワン　スター・ウォーズ・ストーリー」のドニー・イェンと「インファナル・アフェア」「グレートウォール」のアンディ・ラウというアジアの2大スターが共演したクライムドラマ。
+          <textarea name="explain" required cols="36" rows="25" placeholder="ex)「イップ・マン」「ローグ・ワン　スター・ウォーズ・ストーリー」のドニー・イェンと「インファナル・アフェア」「グレートウォール」のアンディ・ラウというアジアの2大スターが共演したクライムドラマ。
 
 1960年代の香港に実在した香港マフィアのボス、ン・シックホーと警察署長ル"></textarea>
         </h2>
 
         <h2>
           CAST<br>
-          <textarea required cols="36" rows="5" placeholder="ex)ドニー・イェン　｜　アンディ・ラウ　｜　フィリップ・キョン　｜　ケント・チェン"></textarea>
+          <textarea name="cast" required cols="36" rows="5"
+            placeholder="ex)ドニー・イェン　｜　アンディ・ラウ　｜　フィリップ・キョン　｜　ケント・チェン"></textarea>
         </h2>
 
       </section>
 
       <section class="product-button">
-        <button>映画追加</button>
+        <button type="submit">映画追加</button>
       </section>
     </form>
   </main>

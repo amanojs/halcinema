@@ -17,6 +17,8 @@
   <!-- fontawesome -->
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
 
+  <script src="/js/axios.min.js"></script>
+
   <title>スクリーンスケジュール screen_schedule</title>
 
   <!-- ページ内スタイル -->
@@ -171,12 +173,9 @@
       background-color: #ddd;
     }
 
-    .screen_sec {
+    .screen_sec_p {
       width: calc(100% + 20px);
       transform: translateX(-10px);
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-evenly;
       position: relative;
       margin: 20px 0 48px 0;
       padding: 36px;
@@ -185,11 +184,20 @@
       border-radius: 8px;
     }
 
+    .screen_sec {
+      width: calc(100% + 20px);
+      transform: translateX(-10px);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-start;
+      background-color: white;
+    }
+
     .screen_sec:nth-child(1) {
       margin-top: 400px;
     }
 
-    .screen_sec h3 {
+    .screen_sec_p h3 {
       position: absolute;
       top: 0;
       left: 28px;
@@ -202,7 +210,7 @@
 
     .screen_sec div {
       position: relative;
-      margin: 8px auto 8px 12px;
+      margin: 8px 8px 8px 12px;
       width: 160px;
       height: 110px;
       padding: 14px 12px;
@@ -212,6 +220,7 @@
     }
 
     .screen_sec h4 {
+      cursor: pointer;
       overflow-y: scroll;
       height: 50px;
       margin-bottom: 10px;
@@ -288,8 +297,8 @@
   <header>
     <h1>
       <a href="/admin">
-        <span class="header-logo">HAL CHINEMA</span>
-        <span class="header-address">NAGOYA</span>
+        <span class="header-logo">HAL CINEMA</span>
+        <span class="header-address"><%= cinemaName %></span>
       </a>
     </h1>
     <div>
@@ -319,7 +328,7 @@
     <form>
       <p>
         <span>Screen</span>
-        <select required>
+        <select required name="screen">
           <option value="" disabled selected>--</option>
           <option value="1">01</option>
           <option value="2">02</option>
@@ -333,7 +342,7 @@
       </p>
       <p>
         <span>上映開始時刻</span>
-        <select required>
+        <select required name="hour">
           <option value="" disabled selected>--</option>
           <option value="1">01</option>
           <option value="2">02</option>
@@ -361,7 +370,7 @@
           <option value="0">00</option>
         </select>
         <span> ： </span>
-        <select required>
+        <select required name="minute">
           <option value="" selected disabled>--</option>
           <option value="0">00</option>
           <option value="5">05</option>
@@ -376,8 +385,11 @@
         </select>
       </p>
       <p>
-        <select required class="panel_product">
+        <select required class="panel_product" name="movieId">
           <option value="" disabled selected>上映追加映画を選択</option>
+          <% for(let movie of movieList){ %>
+          <option value="<%= movie.movieId %>"><%= movie.movieName %></option>
+          <% } %>
           <option value="c01">[吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニー </option>
           <option value="c02">心が叫びたがっているんだ</option>
           <option value="c03">[吹き替え]ハーレクイーン・ジョーカーの過去</option>
@@ -385,8 +397,9 @@
           <option value="c05">１２３４５６７８９０１２３４５６７８９０１２３４５６７８９０１２３４５６７８９０</option>
         </select>
       </p>
-      <button>追加</button>
+      <button type="button" onclick="postSchedule()">追加</button>
     </form>
+
   </div>
   <div class="panel_show" id="panel_show" onclick="panelFadeIn()">
     映画追加パネル表示 ▼
@@ -401,11 +414,14 @@
       <a class="link" href="/admin/screen_schedule">スクリーン上映管理</a>
     </p>
 
-
     <p class="screen_top">
-      <span class="screen_day">06月05日(木)</span>
+      <% const targetDate = new Date(date); %>
+      <% const dayOfWeekStr = [ "日", "月", "火", "水", "木", "金", "土" ]; %>
+      <span
+        class="screen_day"><%= targetDate.getFullYear(); %>年<%= targetDate.getMonth() + 1; %>月<%= targetDate.getDate(); %>日(<%= dayOfWeekStr[targetDate.getDay()]; %>)</span>
       <span>新作上映映画を追加したい際は<a href="/admin/production_add">こちら</a></span>
     </p>
+    <h2>HALシネマ<%= cinemaName %></h2>
     <p class="screen_jump_head">ページ内ジャンプリンク</p>
     <ul class="screen_jump">
       <div>
@@ -425,392 +441,415 @@
 
 
     <!-- -screen1 -->
-    <section class="screen_sec" id="screen1">
+    <section class="screen_sec_p">
       <h3>Screen 01</h3>
       <!-- item -->
-      <div>
-        <h4>[吹き替え・3D]ミッション：インポッシブョニー</h4>
-        <p><span>09：30 〜</span> 11:30</p>
-        <button class="screen_button">
-          <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
-        </button>
-      </div>
-      <!-- item -->
-      <div>
-        <h4>[吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニー</h4>
-        <p><span>09：30 〜</span> 11:30</p>
-        <button class="screen_button">
-          <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
-        </button>
-      </div>
-      <!-- item -->
-      <div>
-        <h4>[吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニー</h4>
-        <p><span>09：30 〜</span> 11:30</p>
-        <button class="screen_button">
-          <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
-        </button>
-      </div>
-      <!-- item -->
-      <div>
-        <h4>[吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニー</h4>
-        <p><span>09：30 〜</span> 11:30</p>
-        <button class="screen_button">
-          <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
-        </button>
-      </div>
-      <!-- item -->
-      <div>
-        <h4>[吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニー</h4>
-        <p><span>09：30 〜</span> 11:30</p>
-        <button class="screen_button">
-          <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
-        </button>
-      </div>
-      <!-- item -->
-      <div>
-        <h4>[吹き替え・3D]ミッション：インポッシブル [吹き替え・3D]ミッション：インポッシブル [吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニーッション：インポッシブル
-          7人の使徒と探すジョニーッション：インポッシブル 7人の使徒と探すジョニー</h4>
-        <p><span>09：30 〜</span> 11:30</p>
-        <button class="screen_button">
-          <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
-        </button>
+      <div class="screen_sec" id="screen1">
+        <div>
+          <h4>[吹き替え・3D]ミッション：インポッシブョニー</h4>
+          <p><span>09：30 〜</span> 11:30</p>
+          <button class="screen_button">
+            <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
+          </button>
+        </div>
+        <!-- item -->
+        <div>
+          <h4>[吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニー</h4>
+          <p><span>09：30 〜</span> 11:30</p>
+          <button class="screen_button">
+            <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
+          </button>
+        </div>
+        <!-- item -->
+        <div>
+          <h4>[吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニー</h4>
+          <p><span>09：30 〜</span> 11:30</p>
+          <button class="screen_button">
+            <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
+          </button>
+        </div>
+        <!-- item -->
+        <div>
+          <h4>[吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニー</h4>
+          <p><span>09：30 〜</span> 11:30</p>
+          <button class="screen_button">
+            <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
+          </button>
+        </div>
+        <!-- item -->
+        <div>
+          <h4>[吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニー</h4>
+          <p><span>09：30 〜</span> 11:30</p>
+          <button class="screen_button">
+            <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
+          </button>
+        </div>
+        <!-- item -->
+        <div>
+          <h4>[吹き替え・3D]ミッション：インポッシブル [吹き替え・3D]ミッション：インポッシブル [吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニーッション：インポッシブル
+            7人の使徒と探すジョニーッション：インポッシブル 7人の使徒と探すジョニー</h4>
+          <p><span>09：30 〜</span> 11:30</p>
+          <button class="screen_button">
+            <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
+          </button>
+        </div>
       </div>
 
     </section>
 
     <!-- -screen2 -->
-    <section class="screen_sec" id="screen2">
+    <section class="screen_sec_p">
       <h3>Screen 02</h3>
-      <p class="screen_none">このスクリーンは現在、スケジュールが登録されていません</p>
+      <div class="screen_sec" id="screen2">
+        <p class="screen_none">このスクリーンは現在、スケジュールが登録されていません</p>
+      </div>
     </section>
 
     <!-- -screen3 -->
-    <section class="screen_sec" id="screen3">
+    <section class="screen_sec_p">
       <h3>Screen 03</h3>
       <!-- item -->
-      <div>
-        <h4>[吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニー</h4>
-        <p><span>09：30 〜</span> 11:30</p>
-        <button class="screen_button">
-          <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
-        </button>
-      </div>
-      <!-- item -->
-      <div>
-        <h4>[吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニー</h4>
-        <p><span>09：30 〜</span> 11:30</p>
-        <button class="screen_button">
-          <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
-        </button>
-      </div>
-      <!-- item -->
-      <div>
-        <h4>[吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニー</h4>
-        <p><span>09：30 〜</span> 11:30</p>
-        <button class="screen_button">
-          <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
-        </button>
-      </div>
-      <!-- item -->
-      <div>
-        <h4>[吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニー</h4>
-        <p><span>09：30 〜</span> 11:30</p>
-        <button class="screen_button">
-          <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
-        </button>
-      </div>
-      <!-- item -->
-      <div>
-        <h4>[吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニー</h4>
-        <p><span>09：30 〜</span> 11:30</p>
-        <button class="screen_button">
-          <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
-        </button>
-      </div>
-      <!-- item -->
-      <div>
-        <h4>[吹き替え・3D]ミッション：インポッシブル [吹き替え・3D]ミッション：インポッシブル [吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニーッション：インポッシブル
-          7人の使徒と探すジョニーッション：インポッシブル 7人の使徒と探すジョニー</h4>
-        <p><span>09：30 〜</span> 11:30</p>
-        <button class="screen_button">
-          <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
-        </button>
+      <div class="screen_sec" id="screen3">
+        <!-- item -->
+        <div>
+          <h4>[吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニー</h4>
+          <p><span>09：30 〜</span> 11:30</p>
+          <button class="screen_button">
+            <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
+          </button>
+        </div>
+        <!-- item -->
+        <div>
+          <h4>[吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニー</h4>
+          <p><span>09：30 〜</span> 11:30</p>
+          <button class="screen_button">
+            <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
+          </button>
+        </div>
+        <!-- item -->
+        <div>
+          <h4>[吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニー</h4>
+          <p><span>09：30 〜</span> 11:30</p>
+          <button class="screen_button">
+            <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
+          </button>
+        </div>
+        <!-- item -->
+        <div>
+          <h4>[吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニー</h4>
+          <p><span>09：30 〜</span> 11:30</p>
+          <button class="screen_button">
+            <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
+          </button>
+        </div>
+        <!-- item -->
+        <div>
+          <h4>[吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニー</h4>
+          <p><span>09：30 〜</span> 11:30</p>
+          <button class="screen_button">
+            <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
+          </button>
+        </div>
+        <!-- item -->
+        <div>
+          <h4>[吹き替え・3D]ミッション：インポッシブル [吹き替え・3D]ミッション：インポッシブル [吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニーッション：インポッシブル
+            7人の使徒と探すジョニーッション：インポッシブル 7人の使徒と探すジョニー</h4>
+          <p><span>09：30 〜</span> 11:30</p>
+          <button class="screen_button">
+            <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
+          </button>
+        </div>
       </div>
 
     </section>
 
     <!-- -screen4 -->
-    <section class="screen_sec" id="screen4">
+    <section class="screen_sec_p">
       <h3>Screen 04</h3>
       <!-- item -->
-      <div>
-        <h4>[吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニー</h4>
-        <p><span>09：30 〜</span> 11:30</p>
-        <button class="screen_button">
-          <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
-        </button>
-      </div>
-      <!-- item -->
-      <div>
-        <h4>[吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニー</h4>
-        <p><span>09：30 〜</span> 11:30</p>
-        <button class="screen_button">
-          <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
-        </button>
-      </div>
-      <!-- item -->
-      <div>
-        <h4>[吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニー</h4>
-        <p><span>09：30 〜</span> 11:30</p>
-        <button class="screen_button">
-          <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
-        </button>
-      </div>
-      <!-- item -->
-      <div>
-        <h4>[吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニー</h4>
-        <p><span>09：30 〜</span> 11:30</p>
-        <button class="screen_button">
-          <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
-        </button>
-      </div>
-      <!-- item -->
-      <div>
-        <h4>[吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニー</h4>
-        <p><span>09：30 〜</span> 11:30</p>
-        <button class="screen_button">
-          <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
-        </button>
-      </div>
-      <!-- item -->
-      <div>
-        <h4>[吹き替え・3D]ミッション：インポッシブル [吹き替え・3D]ミッション：インポッシブル [吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニーッション：インポッシブル
-          7人の使徒と探すジョニーッション：インポッシブル 7人の使徒と探すジョニー</h4>
-        <p><span>09：30 〜</span> 11:30</p>
-        <button class="screen_button">
-          <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
-        </button>
+      <div class="screen_sec" id="screen4">
+        <!-- item -->
+        <div>
+          <h4>[吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニー</h4>
+          <p><span>09：30 〜</span> 11:30</p>
+          <button class="screen_button">
+            <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
+          </button>
+        </div>
+        <!-- item -->
+        <div>
+          <h4>[吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニー</h4>
+          <p><span>09：30 〜</span> 11:30</p>
+          <button class="screen_button">
+            <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
+          </button>
+        </div>
+        <!-- item -->
+        <div>
+          <h4>[吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニー</h4>
+          <p><span>09：30 〜</span> 11:30</p>
+          <button class="screen_button">
+            <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
+          </button>
+        </div>
+        <!-- item -->
+        <div>
+          <h4>[吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニー</h4>
+          <p><span>09：30 〜</span> 11:30</p>
+          <button class="screen_button">
+            <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
+          </button>
+        </div>
+        <!-- item -->
+        <div>
+          <h4>[吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニー</h4>
+          <p><span>09：30 〜</span> 11:30</p>
+          <button class="screen_button">
+            <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
+          </button>
+        </div>
+        <!-- item -->
+        <div>
+          <h4>[吹き替え・3D]ミッション：インポッシブル [吹き替え・3D]ミッション：インポッシブル [吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニーッション：インポッシブル
+            7人の使徒と探すジョニーッション：インポッシブル 7人の使徒と探すジョニー</h4>
+          <p><span>09：30 〜</span> 11:30</p>
+          <button class="screen_button">
+            <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
+          </button>
+        </div>
       </div>
 
     </section>
 
     <!-- -screen5 -->
-    <section class="screen_sec" id="screen5">
+    <section class="screen_sec_p">
       <h3>Screen 05</h3>
       <!-- item -->
-      <div>
-        <h4>[吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニー</h4>
-        <p><span>09：30 〜</span> 11:30</p>
-        <button class="screen_button">
-          <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
-        </button>
+      <div class="screen_sec" id="screen5">
+        <!-- item -->
+        <div>
+          <h4>[吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニー</h4>
+          <p><span>09：30 〜</span> 11:30</p>
+          <button class="screen_button">
+            <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
+          </button>
+        </div>
+        <!-- item -->
+        <div>
+          <h4>[吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニー</h4>
+          <p><span>09：30 〜</span> 11:30</p>
+          <button class="screen_button">
+            <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
+          </button>
+        </div>
+        <!-- item -->
+        <div>
+          <h4>[吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニー</h4>
+          <p><span>09：30 〜</span> 11:30</p>
+          <button class="screen_button">
+            <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
+          </button>
+        </div>
+        <!-- item -->
+        <div>
+          <h4>[吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニー</h4>
+          <p><span>09：30 〜</span> 11:30</p>
+          <button class="screen_button">
+            <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
+          </button>
+        </div>
+        <!-- item -->
+        <div>
+          <h4>[吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニー</h4>
+          <p><span>09：30 〜</span> 11:30</p>
+          <button class="screen_button">
+            <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
+          </button>
+        </div>
+        <!-- item -->
+        <div>
+          <h4>[吹き替え・3D]ミッション：インポッシブル [吹き替え・3D]ミッション：インポッシブル [吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニーッション：インポッシブル
+            7人の使徒と探すジョニーッション：インポッシブル 7人の使徒と探すジョニー</h4>
+          <p><span>09：30 〜</span> 11:30</p>
+          <button class="screen_button">
+            <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
+          </button>
+        </div>
       </div>
-      <!-- item -->
-      <div>
-        <h4>[吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニー</h4>
-        <p><span>09：30 〜</span> 11:30</p>
-        <button class="screen_button">
-          <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
-        </button>
-      </div>
-      <!-- item -->
-      <div>
-        <h4>[吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニー</h4>
-        <p><span>09：30 〜</span> 11:30</p>
-        <button class="screen_button">
-          <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
-        </button>
-      </div>
-      <!-- item -->
-      <div>
-        <h4>[吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニー</h4>
-        <p><span>09：30 〜</span> 11:30</p>
-        <button class="screen_button">
-          <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
-        </button>
-      </div>
-      <!-- item -->
-      <div>
-        <h4>[吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニー</h4>
-        <p><span>09：30 〜</span> 11:30</p>
-        <button class="screen_button">
-          <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
-        </button>
-      </div>
-      <!-- item -->
-      <div>
-        <h4>[吹き替え・3D]ミッション：インポッシブル [吹き替え・3D]ミッション：インポッシブル [吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニーッション：インポッシブル
-          7人の使徒と探すジョニーッション：インポッシブル 7人の使徒と探すジョニー</h4>
-        <p><span>09：30 〜</span> 11:30</p>
-        <button class="screen_button">
-          <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
-        </button>
-      </div>
+
 
     </section>
 
     <!-- -screen6 -->
-    <section class="screen_sec" id="screen6">
+    <section class="screen_sec_p">
       <h3>Screen 06</h3>
       <!-- item -->
-      <div>
-        <h4>[吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニー</h4>
-        <p><span>09：30 〜</span> 11:30</p>
-        <button class="screen_button">
-          <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
-        </button>
-      </div>
-      <!-- item -->
-      <div>
-        <h4>[吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニー</h4>
-        <p><span>09：30 〜</span> 11:30</p>
-        <button class="screen_button">
-          <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
-        </button>
-      </div>
-      <!-- item -->
-      <div>
-        <h4>[吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニー</h4>
-        <p><span>09：30 〜</span> 11:30</p>
-        <button class="screen_button">
-          <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
-        </button>
-      </div>
-      <!-- item -->
-      <div>
-        <h4>[吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニー</h4>
-        <p><span>09：30 〜</span> 11:30</p>
-        <button class="screen_button">
-          <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
-        </button>
-      </div>
-      <!-- item -->
-      <div>
-        <h4>[吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニー</h4>
-        <p><span>09：30 〜</span> 11:30</p>
-        <button class="screen_button">
-          <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
-        </button>
-      </div>
-      <!-- item -->
-      <div>
-        <h4>[吹き替え・3D]ミッション：インポッシブル [吹き替え・3D]ミッション：インポッシブル [吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニーッション：インポッシブル
-          7人の使徒と探すジョニーッション：インポッシブル 7人の使徒と探すジョニー</h4>
-        <p><span>09：30 〜</span> 11:30</p>
-        <button class="screen_button">
-          <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
-        </button>
+      <div class="screen_sec" id="screen6">
+        <!-- item -->
+        <div>
+          <h4>[吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニー</h4>
+          <p><span>09：30 〜</span> 11:30</p>
+          <button class="screen_button">
+            <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
+          </button>
+        </div>
+        <!-- item -->
+        <div>
+          <h4>[吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニー</h4>
+          <p><span>09：30 〜</span> 11:30</p>
+          <button class="screen_button">
+            <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
+          </button>
+        </div>
+        <!-- item -->
+        <div>
+          <h4>[吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニー</h4>
+          <p><span>09：30 〜</span> 11:30</p>
+          <button class="screen_button">
+            <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
+          </button>
+        </div>
+        <!-- item -->
+        <div>
+          <h4>[吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニー</h4>
+          <p><span>09：30 〜</span> 11:30</p>
+          <button class="screen_button">
+            <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
+          </button>
+        </div>
+        <!-- item -->
+        <div>
+          <h4>[吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニー</h4>
+          <p><span>09：30 〜</span> 11:30</p>
+          <button class="screen_button">
+            <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
+          </button>
+        </div>
+        <!-- item -->
+        <div>
+          <h4>[吹き替え・3D]ミッション：インポッシブル [吹き替え・3D]ミッション：インポッシブル [吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニーッション：インポッシブル
+            7人の使徒と探すジョニーッション：インポッシブル 7人の使徒と探すジョニー</h4>
+          <p><span>09：30 〜</span> 11:30</p>
+          <button class="screen_button">
+            <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
+          </button>
+        </div>
       </div>
 
     </section>
 
     <!-- -screen7 -->
-    <section class="screen_sec" id="screen7">
+    <section class="screen_sec_p">
       <h3>Screen 07</h3>
       <!-- item -->
-      <div>
-        <h4>[吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニー</h4>
-        <p><span>09：30 〜</span> 11:30</p>
-        <button class="screen_button">
-          <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
-        </button>
-      </div>
-      <!-- item -->
-      <div>
-        <h4>[吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニー</h4>
-        <p><span>09：30 〜</span> 11:30</p>
-        <button class="screen_button">
-          <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
-        </button>
-      </div>
-      <!-- item -->
-      <div>
-        <h4>[吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニー</h4>
-        <p><span>09：30 〜</span> 11:30</p>
-        <button class="screen_button">
-          <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
-        </button>
-      </div>
-      <!-- item -->
-      <div>
-        <h4>[吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニー</h4>
-        <p><span>09：30 〜</span> 11:30</p>
-        <button class="screen_button">
-          <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
-        </button>
-      </div>
-      <!-- item -->
-      <div>
-        <h4>[吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニー</h4>
-        <p><span>09：30 〜</span> 11:30</p>
-        <button class="screen_button">
-          <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
-        </button>
-      </div>
-      <!-- item -->
-      <div>
-        <h4>[吹き替え・3D]ミッション：インポッシブル [吹き替え・3D]ミッション：インポッシブル [吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニーッション：インポッシブル
-          7人の使徒と探すジョニーッション：インポッシブル 7人の使徒と探すジョニー</h4>
-        <p><span>09：30 〜</span> 11:30</p>
-        <button class="screen_button">
-          <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
-        </button>
+      <div class="screen_sec" id="screen7">
+        <!-- item -->
+        <div>
+          <h4>[吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニー</h4>
+          <p><span>09：30 〜</span> 11:30</p>
+          <button class="screen_button">
+            <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
+          </button>
+        </div>
+        <!-- item -->
+        <div>
+          <h4>[吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニー</h4>
+          <p><span>09：30 〜</span> 11:30</p>
+          <button class="screen_button">
+            <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
+          </button>
+        </div>
+        <!-- item -->
+        <div>
+          <h4>[吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニー</h4>
+          <p><span>09：30 〜</span> 11:30</p>
+          <button class="screen_button">
+            <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
+          </button>
+        </div>
+        <!-- item -->
+        <div>
+          <h4>[吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニー</h4>
+          <p><span>09：30 〜</span> 11:30</p>
+          <button class="screen_button">
+            <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
+          </button>
+        </div>
+        <!-- item -->
+        <div>
+          <h4>[吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニー</h4>
+          <p><span>09：30 〜</span> 11:30</p>
+          <button class="screen_button">
+            <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
+          </button>
+        </div>
+        <!-- item -->
+        <div>
+          <h4>[吹き替え・3D]ミッション：インポッシブル [吹き替え・3D]ミッション：インポッシブル [吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニーッション：インポッシブル
+            7人の使徒と探すジョニーッション：インポッシブル 7人の使徒と探すジョニー</h4>
+          <p><span>09：30 〜</span> 11:30</p>
+          <button class="screen_button">
+            <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
+          </button>
+        </div>
       </div>
 
     </section>
 
     <!-- -screen8 -->
-    <section class="screen_sec" id="screen8">
+    <section class="screen_sec_p">
       <h3>Screen 08</h3>
       <!-- item -->
-      <div>
-        <h4>[吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニー</h4>
-        <p><span>09：30 〜</span> 11:30</p>
-        <button class="screen_button">
-          <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
-        </button>
-      </div>
-      <!-- item -->
-      <div>
-        <h4>[吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニー</h4>
-        <p><span>09：30 〜</span> 11:30</p>
-        <button class="screen_button">
-          <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
-        </button>
-      </div>
-      <!-- item -->
-      <div>
-        <h4>[吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニー</h4>
-        <p><span>09：30 〜</span> 11:30</p>
-        <button class="screen_button">
-          <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
-        </button>
-      </div>
-      <!-- item -->
-      <div>
-        <h4>[吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニー</h4>
-        <p><span>09：30 〜</span> 11:30</p>
-        <button class="screen_button">
-          <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
-        </button>
-      </div>
-      <!-- item -->
-      <div>
-        <h4>[吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニー</h4>
-        <p><span>09：30 〜</span> 11:30</p>
-        <button class="screen_button">
-          <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
-        </button>
-      </div>
-      <!-- item -->
-      <div>
-        <h4>[吹き替え・3D]ミッション：インポッシブル [吹き替え・3D]ミッション：インポッシブル [吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニーッション：インポッシブル
-          7人の使徒と探すジョニーッション：インポッシブル 7人の使徒と探すジョニー</h4>
-        <p><span>09：30 〜</span> 11:30</p>
-        <button class="screen_button">
-          <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
-        </button>
+      <div class="screen_sec" id="screen8">
+        <!-- item -->
+        <div>
+          <h4>[吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニー</h4>
+          <p><span>09：30 〜</span> 11:30</p>
+          <button class="screen_button">
+            <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
+          </button>
+        </div>
+        <!-- item -->
+        <div>
+          <h4>[吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニー</h4>
+          <p><span>09：30 〜</span> 11:30</p>
+          <button class="screen_button">
+            <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
+          </button>
+        </div>
+        <!-- item -->
+        <div>
+          <h4>[吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニー</h4>
+          <p><span>09：30 〜</span> 11:30</p>
+          <button class="screen_button">
+            <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
+          </button>
+        </div>
+        <!-- item -->
+        <div>
+          <h4>[吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニー</h4>
+          <p><span>09：30 〜</span> 11:30</p>
+          <button class="screen_button">
+            <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
+          </button>
+        </div>
+        <!-- item -->
+        <div>
+          <h4>[吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニー</h4>
+          <p><span>09：30 〜</span> 11:30</p>
+          <button class="screen_button">
+            <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
+          </button>
+        </div>
+        <!-- item -->
+        <div>
+          <h4>[吹き替え・3D]ミッション：インポッシブル [吹き替え・3D]ミッション：インポッシブル [吹き替え・3D]ミッション：インポッシブル 7人の使徒と探すジョニーッション：インポッシブル
+            7人の使徒と探すジョニーッション：インポッシブル 7人の使徒と探すジョニー</h4>
+          <p><span>09：30 〜</span> 11:30</p>
+          <button class="screen_button">
+            <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
+          </button>
+        </div>
       </div>
 
     </section>
@@ -827,6 +866,62 @@
 
   <!-- orinal javascript file -->
   <script src="/js/common.js"></script>
+
+  <!-- スケジュール表示 -->
+  <script>
+    const getSchedule = async () => {
+      const result = await axios.get("/api/getSchedule/<%= date %>", {
+        params: {
+          cinemaId: "<%= cinemaId %>"
+        }
+      })
+      console.log(result.data)
+      result.data.forEach((element, index) => {
+        const sec = document.getElementById("screen" + (index + 1))
+        let items = ""
+        if (!element.length) {
+          items = '<p class="screen_none">このスクリーンは現在、スケジュールが登録されていません</p>'
+        }
+        for (let i = 0; i < element.length; i++) {
+          const runs = new Date("2020/12/07 " + element[i].plas)
+          runs.setMinutes(runs.getMinutes() + Number(element[i].runs))
+          const hour = String(runs.getHours())
+          const minute = String(runs.getMinutes())
+          items +=
+            `<div>
+              <h4 onclick="window.location.href = '/admin/production_content/${element[i].movieId}' ">${element[i].movieName}</h4>
+              <p><span>${element[i].plas} 〜</span> ${hour.padStart(2, "0")}:${minute.padStart(2, "0")}</p>
+              <button class="screen_button" onclick="delSchedule(${element[i].runId})">
+                <img src="/images/dust_icon.png" alt="ゴミ箱アイコン">
+              </button>
+            </div>`
+        }
+        sec.innerHTML = items
+      })
+    }
+    getSchedule()
+  </script>
+
+  <!-- 映画スケジュール追加処理 -->
+  <script>
+    const postSchedule = async () => {
+      const postData = {
+        movieId: document.getElementsByName("movieId")[0].value,
+        cinemaId: "<%= cinemaId %>",
+        screen: document.getElementsByName("screen")[0].value,
+        runday: "<%= date %>",
+        plas: document.getElementsByName("hour")[0].value.padStart(2, "0") + ":" + document.getElementsByName("minute")[0].value.padStart(2, "0"),
+      }
+      const result = await axios.post("/admin/screen_schedule/<%= date %>", { ...postData })
+      getSchedule()
+      return false
+    }
+
+    const delSchedule = async (runId) => {
+      const result = await axios.post(`/api/delSchedule/${runId}`)
+      getSchedule()
+    }
+  </script>
 </body>
 
 </html>

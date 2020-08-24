@@ -125,7 +125,8 @@ document.querySelector('#next').addEventListener('click', moveCalendar)
 document.addEventListener("click", function (e) {
     if (e.target.classList.contains("calendar_td")) {
         alert('クリックした日付は' + e.target.dataset.date + 'です')
-        window.location.href = '/admin/screen_schedule';
+        const pathDate = e.target.dataset.date.replace(/\//g, "-")
+        window.location.href = `/admin/screen_schedule/${pathDate}`;
     }
 })
 

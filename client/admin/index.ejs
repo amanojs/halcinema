@@ -146,8 +146,8 @@
   <header>
     <h1>
       <a href="/admin">
-        <span class="header-logo">HAL CHINEMA</span>
-        <span class="header-address">NAGOYA</span>
+        <span class="header-logo">HAL CINEMA</span>
+        <span class="header-address"><%= cinemaName %></span>
       </a>
     </h1>
     <div>
@@ -164,14 +164,14 @@
       <li><a href="/admin/pdf" class="link">データ分析</a></li>
       <li><a href="/admin/production_list" class="link">登録映画一覧</a></li>
       <li><a href="/admin/production_add" class="link">映画追加</a></li>
-      <li class="menu-logout">ログアウト</li>
+      <li class="menu-logout"><a href="/auth/logOut" class="link">ログアウト</a></li>
     </ul>
     <img src="/images/menu_close.png" alt="メニュークローズアイコン" class="menu-close" onclick="menuFadeOut()">
   </article>
 
   <!-- ---main -->
   <main>
-    <h2 class="home_head">上映映画スケジュール調整</h2>
+    <h2 class="home_head">HALシネマ<%= cinemaName %> 上映映画スケジュール調整</h2>
     <p class="home_top">※曜日クリックで編集、上映スケジュールが<span class="attention-color">全て未登録</span>のカレンダーの日付が<span
         class="attention-color">灰色</span>で表示されます。</p>
 

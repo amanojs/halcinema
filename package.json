@@ -4,19 +4,31 @@
   "description": "halcinema server",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "DEBUG=app,app:* nodemon server.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "win": "SET DEBUG=app,app:* && nodemon server.js"
   },
   "author": "amano",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.20.0",
     "body-parser": "^1.19.0",
     "chalk": "^4.1.0",
+    "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
     "debug": "^4.1.1",
+    "dotenv": "^8.2.0",
     "ejs": "^3.1.5",
     "express": "^4.17.1",
+    "express-session": "^1.17.1",
     "express-ws": "^4.0.0",
     "morgan": "^1.10.0",
-    "nodemon": "^2.0.4"
+    "multer": "^1.4.2",
+    "mysql": "^2.18.1",
+    "nl2br": "0.0.3",
+    "nodemon": "^2.0.4",
+    "passport": "^0.4.1",
+    "passport-google-oauth": "^2.0.0",
+    "passport-local": "^1.0.0"
   }
 }
