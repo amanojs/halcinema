@@ -46,31 +46,3 @@ module.exports = () => {
 
   return homeRouter
 }
-
-
-const movieList = [
-  {
-    movieId: 1,
-    movieName: 'キセキ',
-    director: '桒畑天',
-    explain: 'いい映画',
-    cast: '俺',
-    rating: 12,
-    runs: '140',
-    releaseDay: '2020 - 08 - 17T15: 00: 00.000Z',
-    isRelease: 1,
-    poster: '/uploaded/posters/キセキ.jpg'
-  },
-  {
-    movieId: 2,
-    movieName: 'キセキ',
-    director: '桒畑天',
-    explain: 'いい映画',
-    cast: '俺',
-    rating: 12,
-    runs: '140',
-    releaseDay: '2020 - 08 - 17T15: 00: 00.000Z',
-    isRelease: 1,
-    poster: '/uploaded/posters/キセキ.jpg'
-  }
-]
