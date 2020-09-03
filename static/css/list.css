@@ -1,15 +1,26 @@
-#flex{
-    display: flex;
-    flex-wrap: wrap;
+body {
+  background-image: url("../images/hal_nagoya.png");
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: right bottom;
 }
-    .pop{
-        box-sizing: border-box;
-        width: 210px;
-        margin: 23px;
-        padding: 5px;
-        box-shadow: 2px 4px 8px #00000029;
-    }
-    .pop img{
-        width: 200px;
-    }
-    .pop{}
+#flex {
+  display: flex;
+  flex-wrap: wrap;
+}
+.pop {
+  box-sizing: border-box;
+  width: 210px;
+  margin: 23px;
+  padding: 5px;
+  box-shadow: 2px 4px 8px #00000029;
+}
+.pop img {
+  width: 200px;
+}
+.pop {
+}
+
+.posters {
+  opacity: 0;
+}

@@ -246,7 +246,7 @@
     async function showCalendar(year, month) {
       //カレンダーをいくつ作るか configオブジェクトのshowプロパティで設定
       for (i = 0; i < config.show; i++) {
-        const { data } = await axios.get("/api/getCalendar", { params: { year, month } })
+        const { data } = await axios.get("/api/getCalendar", { params: { year, month, cinemaId: "<%= cinemaId %>" } })
         //calendarHTMLにカレンダーtableを作成 自分で定義したcreateCalendarを使用
         const calendarHtml = createCalendar(year, month, data)
         //変数secにcreateElement('section')

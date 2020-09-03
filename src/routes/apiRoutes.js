@@ -58,10 +58,11 @@ module.exports = () => {
   apiRouter.route("/getCalendar").get((req, res) => {
     const year = req.query.year
     const month = req.query.month
+    const cinemaId = req.query.cinemaId
     const min = `${year}-${month}-1`
     const max = `${year}-${month}-31`
-    const sql = "SELECT runDay FROM schedule WHERE runday >= ? AND runday <= ? GROUP BY runDay;"
-    db.query(sql, [min, max], (err, result) => {
+    const sql = "SELECT runDay FROM schedule WHERE runday >= ? AND runday <= ? AND cinemaId = ? GROUP BY runDay;"
+    db.query(sql, [min, max, cinemaId], (err, result) => {
       if (err) {
         res.status(504), json()
         throw err
@@ -74,6 +75,73 @@ module.exports = () => {
       debug(resData)
       res.json(resData)
     })
+  })
+
+  apiRouter.route("/buyTickets").post((req, res) => {
+    console.log(req.body)
+    const sql = "INSERT INTO seat VALUES(?,?,?,?);"
+    for (let ticket of req.body.stock) {
+      db.query(sql, [ticket.runId, ticket.seat, ticket.email, ticket.kind], (err, result) => {
+        if (err) {
+          throw err
+        }
+        const updateSql = "UPDATE schedule SET seats = seats + 1 WHERE runId = ?;"
+        db.query(updateSql, [ticket.runId], (err, result) => {
+          if (err) {
+            throw err
+          }
+          res.status(200).json()
+        })
+      })
+    }
+  })
+
+  apiRouter.route("/getSeat/:runId").get((req, res) => {
+    const runId = req.param("runId")
+    const sql = "SELECT * FROM seat WHERE runId = ?;"
+    db.query(sql, [runId], (err, result) => {
+      if (err) {
+        throw err
+      }
+      res.json(result)
+    })
+  })
+
+  apiRouter.route("/getMovieSchedule").get((req, res) => {
+    if (req.query.cinemaId == "") {
+      return res.status(204).json()
+    }
+    const cinemaId = req.query.cinemaId
+    const date = req.query.date
+    const movieId = req.query.movieId
+    debug(req.query)
+    const sql = "SELECT * FROM schedule INNER JOIN movie_info ON schedule.movieId = movie_info.movieId WHERE schedule.movieId = ? AND schedule.cinemaId = ? AND schedule.runday = ?;"
+    db.query(sql, [movieId, cinemaId, date], (err, result) => {
+      if (err) {
+        throw err
+      }
+      res.json(result)
+      debug(result)
+    })
+  })
+
+
+  /* データ分析 REST */
+
+  // 映画ごとのチケット売り上げ
+  apiRouter.route("/getCustomers").get((req, res) => {
+    const sql = "SELECT movieName,count(seat.runId) as count FROM movie_info LEFT OUTER JOIN schedule ON schedule.movieId = movie_info.movieId LEFT OUTER JOIN seat ON seat.runId = schedule.runId GROUP BY movie_info.movieId;"
+    db.query(sql, (err, result) => {
+      if (err) {
+        throw err
+      }
+      res.json(result)
+    })
+  })
+
+  // 1上映ごとの性別割合
+  apiRouter.route("/getGenderRatio").get((req, res) => {
+
   })
 
   return apiRouter

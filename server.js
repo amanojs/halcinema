@@ -17,15 +17,17 @@ app.set("views", path.join(__dirname, "client"))
 app.use("/", express.static(path.join(__dirname, "static")))
 app.use("/uploaded", express.static(path.join(__dirname, "uploaded")))
 app.use("/js", express.static(path.join(__dirname, "node_modules", "axios", "dist")))
+app.use("/js", express.static(path.join(__dirname, "node_modules", "jquery", "dist")))
 app.use(morgan("dev"))
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(cookieParser())
 app.use(session({
     secret: "halcinema",
     resave: false,
     saveUninitialized: true
-}));
+}))
+require("express-ws")(app)
 require("./src/config/passport")(app)
 
 app.get("/", (req, res) => {
@@ -39,6 +41,7 @@ const adminRouter = require("./src/routes/adminRoutes")()
 const homeRouter = require("./src/routes/user/homeRouter")()
 const productionRouter = require("./src/routes/user/productionRoutes")()
 const usersRouter = require("./src/routes/user/usersRoutes")()
+const reserveRouter = require("./src/routes/user/reserveRoutes")()
 
 app.use("/api", apiRouter)
 app.use("/auth", authRouter)
@@ -56,6 +59,7 @@ app.use("/admin", (req, res, next) => {
 app.use("/home", homeRouter)
 app.use("/production", productionRouter)
 app.use("/users", usersRouter)
+app.use("/reserve", reserveRouter)
 
 app.listen(PORT, () => {
     debug(`server listen on ${chalk.yellow(PORT)} PORT.

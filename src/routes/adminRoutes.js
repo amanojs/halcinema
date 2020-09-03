@@ -58,7 +58,7 @@ const movieList = [
 
 module.exports = () => {
     adminRouter.route("/").get(adminCinema, (req, res) => {
-        res.render("admin/index", { cinemaName: req.cinemaName })
+        res.render("admin/index", { cinemaId: req.cinemaId, cinemaName: req.cinemaName })
     })
 
     adminRouter.route("/login").get((req, res) => {
@@ -101,8 +101,8 @@ module.exports = () => {
         res.render("admin/production_edit")
     })
 
-    adminRouter.route("/production_list").get((req, res) => {
-        res.render("admin/production_list", { movieList })
+    adminRouter.route("/production_list").get(getMovies, (req, res) => {
+        res.render("admin/production_list", { movieList: req.movies })
     })
 
     adminRouter.route("/screen_schedule/:date").get(adminCinema, getMovies, (req, res) => {
@@ -112,7 +112,7 @@ module.exports = () => {
         debug(req.body)
         const data = req.body
         const schedule = [data.cinemaId, data.movieId, data.runday, data.screen, data.plas]
-        const sql = "INSERT INTO schedule VALUES(null,?,?,?,?,?);"
+        const sql = "INSERT INTO schedule VALUES(null,?,?,?,?,?,DEFAULT);"
         db.query(sql, schedule, (err, result) => {
             if (err) {
                 throw err

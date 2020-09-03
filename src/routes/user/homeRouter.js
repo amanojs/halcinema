@@ -30,7 +30,14 @@ module.exports = () => {
     })
 
   homeRouter.route("/release_list").get((req, res) => {
-    res.render("user/home/release_list")
+    const sql = "SELECT * FROM movie_info;"
+    db.query(sql, (err, result) => {
+      if (err) {
+        throw err
+      }
+      debug(result)
+      res.render("user/home/release_list", { movieList: result })
+    })
   })
 
   homeRouter.route("/production_list").get(getMovies, (req, res) => {
@@ -39,3 +46,31 @@ module.exports = () => {
 
   return homeRouter
 }
+
+
+const movieList = [
+  {
+    movieId: 1,
+    movieName: 'キセキ',
+    director: '桒畑天',
+    explain: 'いい映画',
+    cast: '俺',
+    rating: 12,
+    runs: '140',
+    releaseDay: '2020 - 08 - 17T15: 00: 00.000Z',
+    isRelease: 1,
+    poster: '/uploaded/posters/キセキ.jpg'
+  },
+  {
+    movieId: 2,
+    movieName: 'キセキ',
+    director: '桒畑天',
+    explain: 'いい映画',
+    cast: '俺',
+    rating: 12,
+    runs: '140',
+    releaseDay: '2020 - 08 - 17T15: 00: 00.000Z',
+    isRelease: 1,
+    poster: '/uploaded/posters/キセキ.jpg'
+  }
+]

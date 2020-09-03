@@ -175,11 +175,13 @@
     <!-- 映画ポスター一覧 -->
     <section class="poster_sec">
       <!-- poster item -->
+      <%for (const movie of  movieList) {%>
       <div>
-        <a href="/admin/production_content/ここに映画のIDが入る">
-          <img src="/images/poster/c01.jpg" alt="天気の子">
+        <a href="/admin/production_content/<%= movie.movieId %>">
+          <img src="<%= movie.poster %>" alt="<%= movie.movieName%> ">
         </a>
       </div>
+      <% } %>
       <!-- poster item -->
       <div>
         <a href="/admin/production_content">

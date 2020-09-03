@@ -24,6 +24,14 @@ create table schedule(
   plas char(5) not null
 );
 
+create table seat(
+  runId int(12) not null,
+  seat char(3) not null,
+  email varchar(256) not null,
+  kind int(1) not null,
+  primary key(runId,seat)
+);
+
 create table user(
   email varchar(256) primary key not null,
   pass varchar(256) not null,
