@@ -130,8 +130,12 @@ module.exports = () => {
 
   // 映画ごとのチケット売り上げ
   apiRouter.route("/getCustomers").get((req, res) => {
-    const sql = "SELECT movieName,count(seat.runId) as count FROM movie_info LEFT OUTER JOIN schedule ON schedule.movieId = movie_info.movieId LEFT OUTER JOIN seat ON seat.runId = schedule.runId GROUP BY movie_info.movieId;"
-    db.query(sql, (err, result) => {
+    let where = ""
+    if ("first" in req.query && "last" in req.query) {
+      where = `WHERE movie_info.releaseDay > ? AND movie_info.releaseDay < ?`
+    }
+    const sql = `SELECT movieName,releaseDay,count(seat.runId) as count FROM movie_info LEFT OUTER JOIN schedule ON schedule.movieId = movie_info.movieId LEFT OUTER JOIN seat ON seat.runId = schedule.runId ${where} GROUP BY movie_info.movieId ORDER BY movie_info.releaseDay;`
+    db.query(sql, [req.query.first, req.query.last], (err, result) => {
       if (err) {
         throw err
       }

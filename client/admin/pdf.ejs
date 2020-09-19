@@ -17,15 +17,21 @@
   <!-- fontawesome -->
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
 
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0/dist/Chart.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
   <title>データ分析PDF出力 pdf</title>
 
   <!-- ページ内スタイル -->
   <style>
+    body {
+      background-color: #212124;
+    }
+
     main {
       margin: 120px auto 0 auto;
-      max-width: 1000px;
+      max-width: 90%;
       min-width: 350px;
-      width: 80%;
       min-height: 90vh;
       font-size: 1.6rem;
     }
@@ -62,68 +68,227 @@
       width: 90%;
       height: auto;
     }
+
+    header {
+      background-color: #212124;
+    }
+
+    #charts {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    #movieList {
+      width: 600px;
+      height: 290px;
+      border: 1px solid #333;
+      overflow-y: scroll;
+    }
+
+    .movieLists {
+      cursor: pointer;
+      width: 100%;
+      height: 35px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: 0.1s;
+      color: #999;
+    }
+
+    .movieLists:hover {
+      background-color: rgba(246, 186, 62, 0.5);
+      color: #fff;
+    }
+
+    .movieLists h3 {
+      padding-left: 30px;
+    }
+
+    .movieLists p {
+      padding-right: 20px;
+      color: #fff;
+    }
+
+    .movieLists p span {
+      color: #999;
+    }
+
+    .even {
+      background-color: rgba(246, 186, 62, 0.1);
+    }
   </style>
 </head>
 
 <!-- --------------------------body---------------------------------------------------------------------------- -->
 
 <body>
+  <div id="app">
 
-  <!-- ---header -->
-  <header>
-    <h1>
-      <a href="/admin">
-        <span class="header-logo">HAL CHINEMA</span>
-        <span class="header-address">NAGOYA</span>
-      </a>
-    </h1>
-    <div>
-      <img src="/images/menu.png" alt="menu" onclick="menuFadeIn()">
-    </div>
-  </header>
+    <!-- ---header -->
+    <header>
+      <h1>
+        <a href="/admin">
+          <span class="header-logo">HAL CHINEMA</span>
+          <span class="header-address">NAGOYA</span>
+        </a>
+      </h1>
+      <div>
+        <img src="/images/menu.png" alt="menu" onclick="menuFadeIn()">
+      </div>
+    </header>
 
-  <!-- menu -->
-  <article class="menu" id="menu">
-    <h2>MENU</h2>
-    <ul>
-      <li><a href="/admin" class="link">ホーム</a></li>
-      <li><a href="/admin/mail" class="link">メール作成</a></li>
-      <li><a href="/admin/pdf" class="link">データ分析</a></li>
-      <li><a href="/admin/production_list" class="link">登録映画一覧</a></li>
-      <li><a href="/admin/production_add" class="link">映画追加</a></li>
-      <li class="menu-logout">ログアウト</li>
-    </ul>
-    <img src="/images/menu_close.png" alt="メニュークローズアイコン" class="menu-close" onclick="menuFadeOut()">
-  </article>
+    <!-- menu -->
+    <article class="menu" id="menu">
+      <h2>MENU</h2>
+      <ul>
+        <li><a href="/admin" class="link">ホーム</a></li>
+        <li><a href="/admin/mail" class="link">メール作成</a></li>
+        <li><a href="/admin/pdf" class="link">データ分析</a></li>
+        <li><a href="/admin/production_list" class="link">登録映画一覧</a></li>
+        <li><a href="/admin/production_add" class="link">映画追加</a></li>
+        <li class="menu-logout">ログアウト</li>
+      </ul>
+      <img src="/images/menu_close.png" alt="メニュークローズアイコン" class="menu-close" onclick="menuFadeOut()">
+    </article>
 
 
-  <!-- ---main -->
-  <main>
-    <!-- パンくずリスト -->
-    <p>
-      <a class="link" href="/admin">HOME</a>
-      <span class="link-partition">＞</span>
-      <a class="link" href="/admin/pdf">データ分析</a>
-    </p>
-    <section class="form_wrap">
-      <h2>1上映あたりの視聴回数</h2>
+    <!-- ---main -->
+    <main>
+      <!-- パンくずリスト -->
       <p>
-        <select>
-          <option value="" disabled selected>---</option>
-          <option value="age">年代</option>
-          <option value="gender">性別</option>
-          <option value="time">時間</option>
-          <option value="area">地域</option>
-        </select>
-        <span>毎に分割</span>
+        <a class="link" href="/admin">HOME</a>
+        <span class="link-partition">＞</span>
+        <a class="link" href="/admin/pdf">データ分析</a>
       </p>
+      <section class="form_wrap">
+        <h2>1上映あたりの視聴回数</h2>
+        <p>
+          <select>
+            <option value="" disabled selected>---</option>
+            <option value="age">年代</option>
+            <option value="gender">性別</option>
+            <option value="time">時間</option>
+            <option value="area">地域</option>
+          </select>
+          <span>毎に分割</span>
+
+        <div>
+          <input type="date" v-model="formData.first" @change="customerBar">
+        </div>
+        <div>
+          <input type="date" v-model="formData.last" @change="customerBar">
+        </div>
+        </p>
+      </section>
+      <!-- たかしくんお任せ枠作りやすいようにデータ分析画面は作って! -->
+
+      <div id="charts">
+        <div>
+          <canvas id="chart1" width="600" height="400px"></canvas>
+        </div>
+        <div id="movieList">
+          <div class="movieLists" v-for="(item, index) in movieList" :key="index"
+            :class="(index % 2) !== 0 ? '':'even' ">
+            <h3>{{ item.movieName }}</h3>
+            <p>{{ item.count }} <span>count</span></p>
+          </div>
+        </div>
+        <canvas id="chart2" width="500" height="400px"></canvas>
+        <canvas id="chart3" width="500" height="400px"></canvas>
+        <p><button @click="displayGraph">グラフ表示</button></p>
+        <button @click="customerBar">getData</button>
+      </div>
+
       <button>PDF出力実行</button>
-    </section>
-    <!-- たかしくんお任せ枠作りやすいようにデータ分析画面は作って! -->
-    <section class="pdf_output">
-      <h2>1上映あたり視聴回数<span>(性別毎)</span></h2>
-      <img src="/images/pdf_ex.png" alt="画面出力例">
-    </section>
+  </div>
+
+
+  <script src="/js/axios.min.js"></script>
+  <script>
+    const app = new Vue({
+      el: '#app',
+      data: {
+        formData: {
+          first: "",
+          last: ""
+        },
+        chart1: null,
+        chart2: null,
+        chart3: null,
+        movieList: []
+      },
+      created() {
+        const now = new Date()
+        nowStr = `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}-${now.getDate().toString().padStart(2, '0')}`.replace(/\n|\r/g, '')
+        now.setMonth(now.getMonth() - 1)
+        monthAgo = `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}-${now.getDate().toString().padStart(2, '0')}`.replace(/\n|\r/g, '')
+        this.formData.last = nowStr
+        this.formData.first = monthAgo
+        this.customerBar()
+      },
+      methods: {
+        displayGraph(target, { label, data, kind, title }) {
+          const ctx = document.getElementById(target).getContext('2d')
+          if (this[target] === null) {
+            this[target] = new Chart(ctx, {
+              type: kind,
+              data: {
+                labels: label,
+                datasets: [{ label: title, data: data, backgroundColor: "rgba(246,186,62,0.1)", borderColor: "rgba(246,186,62,1)", borderWidth: 1 }]
+              },
+              options: {
+                responsive: true,
+                legend: {
+                  labels: { fontColor: "#fff" }
+                },
+                scales: {
+                  xAxes: [{
+                    display: true,
+                    gridLines: {
+                      display: true,
+                      color: "#444"
+                    },
+                    ticks: {
+                      fontColor: "white",
+                      fontSize: 9,
+                    }
+                  }],
+                  yAxes: [{
+                    display: true,
+                    gridLines: {
+                      display: true,
+                      color: "#444"
+                    },
+                    ticks: {
+                      fontColor: "white",
+                      fontSize: 9,
+                      beginAtZero: true
+                    }
+                  }]
+                }
+              }
+            })
+          } else {
+            this[target].type = kind
+            this[target].data.datasets = [{ ...this[target].data.datasets[0], label: title, data }]
+            this[target].data.labels = label
+            this[target].update()
+          }
+        },
+        async customerBar() {
+          const result = await axios.get("/api/getCustomers", { params: { last: this.formData.last, first: this.formData.first } })
+          const data = result.data.map(val => val.count)
+          const label = result.data.map(val => val.movieName)
+          console.log(label)
+          this.movieList = result.data
+          this.displayGraph("chart1", { label, data, kind: "bar", title: "期間中の来場者数(映画毎)" })
+        }
+      }
+    });
+  </script>
 
   </main>
 
