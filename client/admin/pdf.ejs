@@ -74,8 +74,9 @@
     }
 
     #charts {
-      width: 90%;
+      width: 100%;
       padding: 0 0 100px 0;
+      margin: 0 auto;
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
@@ -124,7 +125,7 @@
     }
 
     #doughnut {
-      width: 600px;
+      width: 550px;
       height: 400px;
       position: relative;
     }
@@ -151,7 +152,7 @@
 
     #chart3-box {
       display: flex;
-      width: 600px;
+      width: 550px;
       height: 400px;
       justify-content: center;
       align-items: center;
@@ -223,7 +224,7 @@
 
       <div id="charts">
         <div>
-          <canvas id="chart1" width="600" height="400px"></canvas>
+          <canvas id="chart1" width="550" height="400px"></canvas>
         </div>
         <div id="movieList">
           <div class="movieLists" v-for="(item, index) in movieList" :key="index"
@@ -232,7 +233,7 @@
             <p>{{ item.count }} <span>tickets</span></p>
           </div>
         </div>
-        <canvas id="chart2" width="600" height="400"></canvas>
+        <canvas id="chart2" width="550" height="400"></canvas>
         <div id="doughnut">
           <div id="doughnut-status">
             <h3>男女比率</h3>
