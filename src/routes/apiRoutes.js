@@ -3,8 +3,10 @@ const db = require("../config/mysql")()
 const debug = require("debug")("app:api")
 const Schedule = require("../models/Schedule")
 const { json } = require("body-parser")
+const osu = require('node-os-utils')
 
 const apiRouter = express.Router()
+const cpu = osu.cpu
 
 module.exports = () => {
 
@@ -79,9 +81,10 @@ module.exports = () => {
 
   apiRouter.route("/buyTickets").post((req, res) => {
     console.log(req.body)
-    const sql = "INSERT INTO seat VALUES(?,?,?,?);"
+    const sql = "INSERT INTO seat VALUES(?,?,?,?,?);"
+    const now = new Date().toLocaleString()
     for (let ticket of req.body.stock) {
-      db.query(sql, [ticket.runId, ticket.seat, ticket.email, ticket.kind], (err, result) => {
+      db.query(sql, [ticket.runId, ticket.seat, ticket.email, ticket.kind, now], (err, result) => {
         if (err) {
           throw err
         }
@@ -134,7 +137,21 @@ module.exports = () => {
     if ("first" in req.query && "last" in req.query) {
       where = `WHERE movie_info.releaseDay > ? AND movie_info.releaseDay < ?`
     }
-    const sql = `SELECT movieName,releaseDay,count(seat.runId) as count FROM movie_info LEFT OUTER JOIN schedule ON schedule.movieId = movie_info.movieId LEFT OUTER JOIN seat ON seat.runId = schedule.runId ${where} GROUP BY movie_info.movieId ORDER BY movie_info.releaseDay;`
+    const sql = `SELECT movie_info.movieId,movieName,releaseDay,count(seat.runId) as count FROM movie_info LEFT OUTER JOIN schedule ON schedule.movieId = movie_info.movieId LEFT OUTER JOIN seat ON seat.runId = schedule.runId ${where} GROUP BY movie_info.movieId ORDER BY movie_info.releaseDay;`
+    db.query(sql, [req.query.first, req.query.last], (err, result) => {
+      if (err) {
+        throw err
+      }
+      res.json(result)
+    })
+  })
+
+  apiRouter.route("/getSales").get((req, res) => {
+    let where = ""
+    if ("first" in req.query && "last" in req.query) {
+      where = `WHERE movie_info.releaseDay > ? AND movie_info.releaseDay < ?`
+    }
+    const sql = `SELECT movie_info.movieId,movieName,releaseDay,count(seat.runId) as count,SUM(kind.value)/1000 as value FROM movie_info LEFT OUTER JOIN schedule ON schedule.movieId = movie_info.movieId LEFT OUTER JOIN seat ON seat.runId = schedule.runId LEFT OUTER JOIN kind ON seat.kind = kind.kind ${where} GROUP BY movie_info.movieId ORDER BY movie_info.releaseDay;`
     db.query(sql, [req.query.first, req.query.last], (err, result) => {
       if (err) {
         throw err
@@ -145,8 +162,36 @@ module.exports = () => {
 
   // 1上映ごとの性別割合
   apiRouter.route("/getGenderRatio").get((req, res) => {
-
+    let sql = ""
+    const holder = []
+    if ("movieId" in req.query) {
+      sql = "SELECT count(*) AS count FROM seat INNER JOIN user ON seat.email = user.email INNER JOIN schedule ON seat.runId = schedule.runId WHERE schedule.movieId = ? GROUP BY user.gender ORDER BY user.gender"
+      holder.push(req.query.movieId)
+    } else {
+      sql = "SELECT count(*) AS count FROM seat INNER JOIN user ON seat.email = user.email GROUP BY user.gender"
+    }
+    db.query(sql, holder, (err, result) => {
+      if (err) {
+        throw err
+      }
+      debug(result)
+      const resData = [0, 0]
+      for (let i = 0; i < result.length; i++) {
+        resData[i] = result[i].count
+      }
+      res.json(resData)
+    })
   })
+
+  apiRouter.route("/getCpuUsage").get((req, res) => {
+    (async () => {
+      const info = await cpu.usage()
+      res.json({ info })
+    })()
+  })
+
+  // チケット取得
+  apiRouter.route("")
 
   return apiRouter
 }

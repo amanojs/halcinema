@@ -21,7 +21,8 @@ create table schedule(
   movieId int(10) not null,
   runday date not null,
   screen int(2) not null,
-  plas char(5) not null
+  plas char(5) not null,
+  seats int(4) default 0
 );
 
 create table seat(
@@ -29,8 +30,19 @@ create table seat(
   seat char(3) not null,
   email varchar(256) not null,
   kind int(1) not null,
+  `when` datetime not null,
   primary key(runId,seat)
 );
+
+create table kind(
+  kind int(1) not null,
+  `name` varchar(20) not null,
+  `value` int(4) not null
+);
+
+insert into kind values(0,"大人",2000);
+insert into kind values(1,"小・中学生",1500);
+insert into kind values(2,"高齢者",1200);
 
 create table user(
   email varchar(256) primary key not null,
