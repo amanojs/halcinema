@@ -7,6 +7,7 @@ const osu = require('node-os-utils')
 
 const apiRouter = express.Router()
 const cpu = osu.cpu
+const mem = osu.mem
 
 module.exports = () => {
 
@@ -183,10 +184,30 @@ module.exports = () => {
     })
   })
 
+  apiRouter.route("/getAllSales").get((req, res) => {
+    const sql = "SELECT count(seat.runId) as count,SUM(kind.value)/1000 as value, DATE_FORMAT(`when`, '%Y-%m') AS grouping_column FROM seat LEFT OUTER JOIN schedule ON seat.runId = schedule.runId LEFT OUTER JOIN kind ON seat.kind = kind.kind GROUP BY grouping_column ORDER BY grouping_column LIMIT 12;"
+    db.query(sql, (err, result) => {
+      if (err) {
+        throw err
+      }
+      debug(result)
+      res.json(result)
+    })
+  })
+
   apiRouter.route("/getCpuUsage").get((req, res) => {
     (async () => {
       const info = await cpu.usage()
       res.json({ info })
+    })()
+  })
+
+  apiRouter.route("/getFreeRatio").get((req, res) => {
+    (async () => {
+      const { freeMemPercentage } = await mem.info()
+      const freeCpuPercentage = await cpu.free()
+      debug(freeMemPercentage, freeCpuPercentage)
+      res.json([freeMemPercentage, freeCpuPercentage])
     })()
   })
 

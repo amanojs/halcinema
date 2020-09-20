@@ -125,7 +125,7 @@
     }
 
     #doughnut {
-      width: 550px;
+      width: 600px;
       height: 400px;
       position: relative;
     }
@@ -136,9 +136,7 @@
       text-align: center;
       position: absolute;
       top: 170px;
-      left: 0;
-      right: 0;
-      margin: 0 auto;
+      left: 175px;
     }
 
     #doughnut-status span {
@@ -158,6 +156,14 @@
       align-items: center;
       border-left: 1px solid #444;
       border-bottom: 1px solid #444;
+    }
+
+    #chart2 {
+      margin-top: 30px;
+    }
+
+    #chart5 {
+      margin-top: 30px;
     }
   </style>
 </head>
@@ -224,7 +230,7 @@
 
       <div id="charts">
         <div>
-          <canvas id="chart1" width="550" height="400px"></canvas>
+          <canvas id="chart1" width="600" height="400px"></canvas>
         </div>
         <div id="movieList">
           <div class="movieLists" v-for="(item, index) in movieList" :key="index"
@@ -233,7 +239,7 @@
             <p>{{ item.count }} <span>tickets</span></p>
           </div>
         </div>
-        <canvas id="chart2" width="550" height="400"></canvas>
+        <canvas id="chart4" width="600" height="400"></canvas>
         <div id="doughnut">
           <div id="doughnut-status">
             <h3>男女比率</h3>
@@ -242,9 +248,11 @@
             <p>総数: {{ genderRatio.men +  genderRatio.women }}</p>
           </div>
           <div id="chart3-box">
-            <canvas id="chart3" width="550" height="350"></canvas>
+            <canvas id="chart3" width="600" height="350"></canvas>
           </div>
         </div>
+        <canvas id="chart2" width="600" height="400"></canvas>
+        <canvas id="chart5" width="600" height="400"></canvas>
       </div>
   </div>
 
@@ -262,10 +270,17 @@
         chart1: null,
         chart2: null,
         chart3: null,
+        chart4: null,
+        chart5: null,
         movieList: [],
         cpuInfo: {
           label: [],
           data: []
+        },
+        freeInfo: {
+          label: [],
+          memData: [],
+          cpuData: []
         },
         genderRatio: {
           about: null,
@@ -284,6 +299,8 @@
         this.customerBar()
         this.cpuUsageLine()
         this.genderDoughnut()
+        this.allSalesLine()
+        this.UsageRate()
       },
       methods: {
         displayGraph(target, { label, data, kind, title, bg, br, x, y }) {
@@ -361,6 +378,24 @@
           this.movieList = result.data
           this.displayGraph("chart1", { label, data, kind: "bar", title: "映画毎売上額(千円)" })
         },
+        async allSalesLine() {
+          const label_data = []
+          let data = new Array(12).fill(0)
+          for (let i = 11; i > -1; i--) {
+            const now = new Date()
+            now.setMonth(now.getMonth() - i)
+            label_data.push(now.getFullYear() + "-" + String(now.getMonth() + 1).padStart(2, "0"))
+          }
+          console.log(label_data)
+          const result = await axios.get("/api/getAllSales")
+          result.data.forEach((val, i) => {
+            const outcome = label_data.indexOf(val.grouping_column)
+            if (outcome !== -1) {
+              data[outcome] = val.value
+            }
+          })
+          this.displayGraph("chart4", { label: label_data, data, kind: "line", title: "総売上推移(千円)" })
+        },
         async cpuUsageLine() {
           const maxData = 20
           this.displayGraph("chart2", { label: this.cpuInfo.label, data: this.cpuInfo.data, kind: "line", title: "サーバCPU負荷度" })
@@ -378,6 +413,76 @@
           this.displayGraph("chart2", { label: this.cpuInfo.label, data: this.cpuInfo.data, kind: "line", title: "サーバCPU負荷度" })
           setTimeout(this.cpuUsageLine, 1000)
         },
+        async UsageRate() {
+          const maxData = 20
+          const { data } = await axios.get("/api/getFreeRatio")
+          if (this.freeInfo.memData.length >= maxData) {
+            this.freeInfo.memData.shift()
+          }
+          if (this.freeInfo.cpuData.length >= maxData) {
+            this.freeInfo.cpuData.shift()
+          }
+          const now = new Date()
+          const nowStr = String(now.getMinutes()).padStart(2, "0") + ":" + String(now.getSeconds()).padStart(2, "0")
+          if (this.freeInfo.label.length >= maxData) {
+            this.freeInfo.label.shift()
+          }
+          this.freeInfo.label.push(nowStr)
+          this.freeInfo.memData = [...this.freeInfo.memData, data[0]]
+          this.freeInfo.cpuData = [...this.freeInfo.cpuData, data[1]]
+          const ctx = document.getElementById("chart5").getContext('2d')
+          if (this.chart5 === null) {
+            this.chart5 = new Chart(ctx, {
+              type: "line",
+              data: {
+                labels: this.freeInfo.label,
+                datasets: [
+                  { label: ["メモリ空き領域"], type: "line", data: this.freeInfo.memData, backgroundColor: "rgba(0,210,211,0.3)", borderColor: "rgba(0,210,211,0.8)", borderWidth: 1, lineTension: 0 },
+                  { label: ["CPU空き領域"], type: "line", data: this.freeInfo.cpuData, backgroundColor: "rgba(16,172,132,0.1)", borderColor: "rgba(16,172,132,0.8)", borderWidth: 1, lineTension: 0 }
+                ]
+              },
+              options: {
+                responsive: false,
+                legend: {
+                  labels: { fontColor: "#fff" }
+                },
+                animationEasing: 'easeInOutQuart',
+                animationSteps: 80,
+                scales: {
+                  xAxes: [{
+                    display: true,
+                    gridLines: {
+                      display: true,
+                      color: "#444"
+                    },
+                    ticks: {
+                      fontColor: "white",
+                      fontSize: 9,
+                    }
+                  }],
+                  yAxes: [{
+                    display: true,
+                    gridLines: {
+                      display: true,
+                      color: "#444"
+                    },
+                    ticks: {
+                      fontColor: "white",
+                      fontSize: 9,
+                      beginAtZero: true
+                    }
+                  }]
+                }
+              }
+            })
+          } else {
+            this.chart5.type = "line"
+            this.chart5.data.labels = this.freeInfo.label
+            this.chart5.data.datasets = [{ ...this.chart5.data.datasets[0], data: this.freeInfo.memData }, { ...this.chart5.data.datasets[1], data: this.freeInfo.cpuData }]
+            this.chart5.update()
+          }
+          setTimeout(this.UsageRate, 2000)
+        },
         async genderDoughnut() {
           let params = { params: {} }
           if (this.genderRatio.about !== null) {
@@ -386,7 +491,7 @@
           const { data } = await axios.get("/api/getGenderRatio", params)
           this.genderRatio.men = data[0]
           this.genderRatio.women = data[1]
-          this.displayGraph("chart3", { label: ["男", "女"], data, kind: "doughnut", title: "男女比率", bg: ["rgba(116,185,255,0.2)", "rgba(232,67,147,0.2)"], br: ["rgba(116,185,255,0.5)", "rgba(232,67,147,0.5)"], y: { gridLines: { display: true } }, x: { ticks: { display: true } } })
+          this.displayGraph("chart3", { label: ["男", "女"], data, kind: "doughnut", title: "男女比率", bg: ["rgba(116,185,255,0.3)", "rgba(232,67,147,0.3)"], br: ["rgba(116,185,255,0.5)", "rgba(232,67,147,0.5)"], y: { gridLines: { display: true } }, x: { ticks: { display: true } } })
         },
         changeGenderRatio(i) {
           this.genderRatio.about = i

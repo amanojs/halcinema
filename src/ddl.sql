@@ -34,6 +34,25 @@ create table seat(
   primary key(runId,seat)
 );
 
+insert into seat values(1,"A1","test@test.com",0,"2019-11-08 00:00:00");
+insert into seat values(1,"A2","test@test.com",1,"2019-11-08 00:00:00");
+insert into seat values(1,"A3","test@test.com",2,"2019-11-08 00:00:00");
+insert into seat values(1,"A4","test@test.com",1,"2019-11-08 00:00:00");
+insert into seat values(1,"A5","test@test.com",0,"2019-11-08 00:00:00");
+insert into seat values(1,"A6","test@test.com",0,"2019-11-08 00:00:00");
+insert into seat values(1,"A7","test@test.com",1,"2019-11-08 00:00:00");
+insert into seat values(1,"A8","test@test.com",0,"2019-11-08 00:00:00");
+insert into seat values(1,"A9","test@test.com",0,"2019-11-08 00:00:00");
+insert into seat values(1,"B1","test@test.com",0,"2019-11-08 00:00:00");
+insert into seat values(1,"B2","test@test.com",1,"2019-11-08 00:00:00");
+insert into seat values(1,"B3","test@test.com",2,"2019-11-08 00:00:00");
+insert into seat values(1,"B4","test@test.com",1,"2019-11-08 00:00:00");
+insert into seat values(1,"B5","test@test.com",0,"2019-11-08 00:00:00");
+insert into seat values(1,"B6","test@test.com",0,"2019-11-08 00:00:00");
+insert into seat values(1,"B7","test@test.com",1,"2019-11-08 00:00:00");
+insert into seat values(1,"B8","test@test.com",0,"2019-11-08 00:00:00");
+insert into seat values(1,"B9","test@test.com",0,"2019-11-08 00:00:00");
+
 create table kind(
   kind int(1) not null,
   `name` varchar(20) not null,
