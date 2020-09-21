@@ -14,6 +14,8 @@
   <link rel="stylesheet" href="/css/common_admin.css">
   <!--共有の -->
 
+
+
   <!-- fontawesome -->
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
 
@@ -165,6 +167,10 @@
     #chart5 {
       margin-top: 30px;
     }
+
+    #graphs {
+      display: none;
+    }
   </style>
 </head>
 
@@ -224,6 +230,7 @@
         <div>
           <input type="date" v-model="formData.last" @change="customerBar">
         </div>
+        <div><button @click="print">pdf出力</button></div>
         </p>
       </section>
       <!-- たかしくんお任せ枠作りやすいようにデータ分析画面は作って! -->
@@ -256,6 +263,12 @@
       </div>
   </div>
 
+  <div id="graphs">
+    <div class="print">
+      <h2>直近12ヶ月の売上金額推移と累計</h2>
+      <canvas id="printChart1" width="1000" height="600"></canvas>
+    </div>
+  </div>
 
   <script src="/js/axios.min.js"></script>
   <script>
@@ -288,7 +301,7 @@
           women: 0
         }
       },
-      mounted() {
+      async mounted() {
         Chart.defaults.global.animation.duration = 2000
         const now = new Date()
         nowStr = `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}-${now.getDate().toString().padStart(2, '0')}`.replace(/\n|\r/g, '')
@@ -301,6 +314,89 @@
         this.genderDoughnut()
         this.allSalesLine()
         this.UsageRate()
+        const label_data = []
+        let data = new Array(12).fill(0)
+        for (let i = 11; i > -1; i--) {
+          const now = new Date()
+          now.setMonth(now.getMonth() - i)
+          label_data.push(now.getFullYear() + "-" + String(now.getMonth() + 1).padStart(2, "0"))
+        }
+        const result = await axios.get("/api/getAllSales")
+        result.data.forEach((val, i) => {
+          const outcome = label_data.indexOf(val.grouping_column)
+          if (outcome !== -1) {
+            data[outcome] = val.value
+          }
+        })
+        const bar_data = []
+        let sumData = 0
+        data.forEach((val, i) => {
+          sumData += val
+          bar_data.push(sumData)
+        })
+        const ctx1 = document.getElementById("printChart1").getContext("2d")
+        new Chart(ctx1, {
+          type: "bar",           // 一応棒グラフだとしておく
+          data: {
+            labels: label_data,
+            datasets: [
+              {
+                type: "line",            // この系列を折線グラフだと指定
+                label: "売上推移(千円)",
+                data,
+                tension: 0,
+                fill: false,
+                backgroundColor: "rgba(0,210,211,0.3)",
+                borderColor: "rgba(0,210,211,0.9)",
+                borderWidth: 1
+              },
+              {
+                label: "累計売上(千円)",
+                data: bar_data,
+                backgroundColor: "rgba(246,186,62,0.1)",
+                borderColor: "rgba(246,186,62,1)",
+                borderWidth: 1
+              }
+            ]
+          },
+          options: {
+            responsive: false,
+            title: {
+              display: true,
+              fontSize: 20
+            },
+            legend: {
+              labels: { fontColor: "#555" },
+              position: 'top'
+            },
+            scales: {
+              xAxes: [{
+                display: true,
+                gridLines: {
+                  display: true,
+                  color: "#eee"
+                },
+                ticks: {
+                  fontColor: "#555",
+                  fontSize: 9,
+                }
+              }],
+              yAxes: [{
+                display: true,
+                gridLines: {
+                  display: true,
+                  color: "#eee"
+                },
+                ticks: {
+                  fontColor: "#555",
+                  fontSize: 9,
+                  beginAtZero: true
+                }
+              }]
+            }
+
+          }
+        })
       },
       methods: {
         displayGraph(target, { label, data, kind, title, bg, br, x, y }) {
@@ -386,7 +482,6 @@
             now.setMonth(now.getMonth() - i)
             label_data.push(now.getFullYear() + "-" + String(now.getMonth() + 1).padStart(2, "0"))
           }
-          console.log(label_data)
           const result = await axios.get("/api/getAllSales")
           result.data.forEach((val, i) => {
             const outcome = label_data.indexOf(val.grouping_column)
@@ -394,11 +489,88 @@
               data[outcome] = val.value
             }
           })
-          this.displayGraph("chart4", { label: label_data, data, kind: "line", title: "総売上推移(千円)" })
+          const bar_data = []
+          let sumData = 0
+          data.forEach((val, i) => {
+            sumData += val
+            bar_data.push(sumData)
+          })
+          console.log(bar_data)
+          const ctx = document.getElementById("chart4").getContext('2d')
+          if (this.chart4 === null) {
+            this.chart4 = new Chart(ctx, {
+              type: "bar",           // 一応棒グラフだとしておく
+              data: {
+                labels: label_data,
+                datasets: [
+                  {
+                    type: "line",            // この系列を折線グラフだと指定
+                    label: "売上推移(千円)",
+                    data,
+                    tension: 0,
+                    fill: false,
+                    backgroundColor: "rgba(0,210,211,0.3)",
+                    borderColor: "rgba(0,210,211,0.9)",
+                    borderWidth: 1
+                  },
+                  {
+                    label: "累計売上(千円)",
+                    data: bar_data,
+                    backgroundColor: "rgba(246,186,62,0.1)",
+                    borderColor: "rgba(246,186,62,1)",
+                    borderWidth: 1
+                  }
+                ]
+              },
+              options: {
+                responsive: false,
+                title: {
+                  display: true,
+                  fontSize: 20
+                },
+                legend: {
+                  labels: { fontColor: "#fff" },
+                  position: 'top'
+                },
+                scales: {
+                  xAxes: [{
+                    display: true,
+                    gridLines: {
+                      display: true,
+                      color: "#444"
+                    },
+                    ticks: {
+                      fontColor: "white",
+                      fontSize: 9,
+                    }
+                  }],
+                  yAxes: [{
+                    display: true,
+                    gridLines: {
+                      display: true,
+                      color: "#444"
+                    },
+                    ticks: {
+                      fontColor: "white",
+                      fontSize: 9,
+                      beginAtZero: true
+                    }
+                  }]
+                }
+
+              }
+            })
+          } else {
+            this.chart4.data.type = "bar"
+            this.chart4.data.labels = this.freeInfo.label
+            this.chart4.data.datasets = [{ ...this.chart4.data.datasets[0], data }, { ...this.chart4.data.datasets[1], data: bar_data }]
+            this.chart4.update()
+          }
+          //this.displayGraph("chart4", { label: label_data, data, kind: "line", title: "総売上推移(千円)" })
         },
         async cpuUsageLine() {
           const maxData = 20
-          this.displayGraph("chart2", { label: this.cpuInfo.label, data: this.cpuInfo.data, kind: "line", title: "サーバCPU負荷度" })
+          this.displayGraph("chart2", { label: this.cpuInfo.label, data: this.cpuInfo.data, kind: "line", title: "サーバCPU負荷度", bg: ["rgba(0,98,102,0.4)"], br: ["rgba(0,98,102,1)"] })
           const { data } = await axios.get("/api/getCpuUsage")
           const now = new Date()
           const nowStr = String(now.getMinutes()).padStart(2, "0") + ":" + String(now.getSeconds()).padStart(2, "0")
@@ -496,6 +668,9 @@
         changeGenderRatio(i) {
           this.genderRatio.about = i
           this.genderDoughnut()
+        },
+        print() {
+          window.print()
         }
       }
     });
@@ -513,6 +688,7 @@
 
   <!-- orinal javascript file -->
   <script src="/js/common.js"></script>
+  <link rel="stylesheet" href="/css/print.css" type="text/css" media="print" />
 </body>
 
 </html>
