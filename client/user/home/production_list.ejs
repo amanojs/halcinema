@@ -12,10 +12,18 @@
 	<link rel="stylesheet" href="../css/reset.css">
 	<link rel="stylesheet" href="../css/common.css">
 	<link rel="stylesheet" href="../css/list.css">
-
+	<% const path = ["hal_tokyo.png","hal_osaka.png","hal_nagoya.png"] %>
 </head>
 
-<body>
+<body style="background-image: url('../images/<%= path[cinemaId] %>');">
+	<style>
+		body {
+			background-image: url("../images/hal_nagoya.png");
+			background-repeat: no-repeat;
+			background-attachment: fixed;
+			background-position: right bottom;
+		}
+	</style>
 
 	<header>
 		<div id="halcinema" onclick="window.location.href = '/home/today_schedule'">

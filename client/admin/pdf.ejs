@@ -570,7 +570,7 @@
         },
         async cpuUsageLine() {
           const maxData = 20
-          this.displayGraph("chart2", { label: this.cpuInfo.label, data: this.cpuInfo.data, kind: "line", title: "サーバCPU負荷度", bg: ["rgba(0,98,102,0.4)"], br: ["rgba(0,98,102,1)"] })
+          this.displayGraph("chart2", { label: this.cpuInfo.label, data: this.cpuInfo.data, kind: "line", title: "サーバCPU負荷度", bg: ["rgba(0,210,211,0.3)"], br: "rgba(0,210,211,0.8)" })
           const { data } = await axios.get("/api/getCpuUsage")
           const now = new Date()
           const nowStr = String(now.getMinutes()).padStart(2, "0") + ":" + String(now.getSeconds()).padStart(2, "0")

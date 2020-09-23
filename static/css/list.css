@@ -1,9 +1,3 @@
-body {
-  background-image: url("../images/hal_nagoya.png");
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  background-position: right bottom;
-}
 #flex {
   display: flex;
   flex-wrap: wrap;

@@ -83,7 +83,8 @@ module.exports = () => {
   apiRouter.route("/buyTickets").post((req, res) => {
     console.log(req.body)
     const sql = "INSERT INTO seat VALUES(?,?,?,?,?);"
-    const now = new Date().toLocaleString()
+    const date = new Date()
+    const now = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds()
     for (let ticket of req.body.stock) {
       db.query(sql, [ticket.runId, ticket.seat, ticket.email, ticket.kind, now], (err, result) => {
         if (err) {
@@ -166,10 +167,10 @@ module.exports = () => {
     let sql = ""
     const holder = []
     if ("movieId" in req.query) {
-      sql = "SELECT count(*) AS count FROM seat INNER JOIN user ON seat.email = user.email INNER JOIN schedule ON seat.runId = schedule.runId WHERE schedule.movieId = ? GROUP BY user.gender ORDER BY user.gender"
+      sql = "SELECT count(*) AS count,user.gender AS gender FROM seat INNER JOIN user ON seat.email = user.email INNER JOIN schedule ON seat.runId = schedule.runId WHERE schedule.movieId = ? GROUP BY user.gender ORDER BY user.gender"
       holder.push(req.query.movieId)
     } else {
-      sql = "SELECT count(*) AS count FROM seat INNER JOIN user ON seat.email = user.email GROUP BY user.gender"
+      sql = "SELECT count(*) AS count,user.gender AS gender FROM seat INNER JOIN user ON seat.email = user.email GROUP BY user.gender"
     }
     db.query(sql, holder, (err, result) => {
       if (err) {
@@ -178,7 +179,7 @@ module.exports = () => {
       debug(result)
       const resData = [0, 0]
       for (let i = 0; i < result.length; i++) {
-        resData[i] = result[i].count
+        resData[result[i].gender] = result[i].count
       }
       res.json(resData)
     })
