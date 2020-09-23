@@ -130,6 +130,16 @@ module.exports = () => {
     })
   })
 
+  apiRouter.route("/getValue").get((req, res) => {
+    const sql = "SELECT * FROM kind"
+    db.query(sql, (err, result) => {
+      if (err) {
+        throw err
+      }
+      res.json(result)
+    })
+  })
+
 
   /* データ分析 REST */
 

@@ -3,6 +3,7 @@ const debug = require("debug")("app:reserveRoutes")
 const db = require("../../config/mysql")()
 
 const reserveRouter = express.Router()
+const getCinemaInfo = require("../../middleware/getCinemaInfo")
 
 let connects = []
 
@@ -23,13 +24,13 @@ module.exports = () => {
             req.schedule = result[0]
             next()
         })
-    }).get((req, res) => {
+    }, getCinemaInfo).get((req, res) => {
         const runId = req.param("runId")
         const test = connects.filter((conn) => {
             return conn.runId === runId ? true : false
         })
         if (test.length) return res.render("user/reserve/product_seat", { ...req.schedule, email: req.user.email, lock: true })
-        res.render("user/reserve/product_seat", { ...req.schedule, email: req.user.email, lock: false })
+        res.render("user/reserve/product_seat", { ...req.schedule, email: req.user.email, lock: false, cinemaName: req.session.cinemaName })
     })
 
     reserveRouter.ws("/ws/:runId", (ws, req) => {
