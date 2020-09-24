@@ -210,6 +210,7 @@
 
 
 	<script src="/js/axios.min.js"></script>
+	<script src="/js/jquery.min.js"></script>
 	<script>
 		const kind = ["", "A", "B", "C", "D", "E", "F", "G", "H"]
 		const seat_length = 16
@@ -329,11 +330,14 @@
 				},
 				buyTickets() {
 					(async function () {
+						$("#buy_cont").fadeOut(10);
 						const { status } = await axios.post("/api/buyTickets", { stock: app.stock });
 						console.log(status)
 						if (status === 200) {
 							//成功処理
 							app.pageIndex = 2
+							$("#buy_cont").delay(400).fadeIn(300)
+							$("#buy_cont").animate({ "margin-top": "110px" })
 						} else {
 							//失敗処理
 						}
