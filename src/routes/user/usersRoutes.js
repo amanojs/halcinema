@@ -29,7 +29,7 @@ module.exports = () => {
         throw err
       }
       const [userData] = result
-      const ticketSql = "SELECT movie_info.movieId,movieName,GROUP_CONCAT(seat.seat) AS seats,plas,runs,runday,screen,poster FROM seat INNER JOIN schedule ON seat.runId=schedule.runId INNER JOIN movie_info ON schedule.movieId=movie_info.movieId WHERE seat.email=? GROUP BY seat.runId;"
+      const ticketSql = "SELECT movie_info.movieId,cinemaId,movieName,GROUP_CONCAT(seat.seat) AS seats,plas,runs,runday,screen,poster FROM seat INNER JOIN schedule ON seat.runId=schedule.runId INNER JOIN movie_info ON schedule.movieId=movie_info.movieId WHERE seat.email=? GROUP BY seat.runId;"
       db.query(ticketSql, [email], (ticketErr, ticketResult) => {
         if (ticketErr) {
           throw ticketErr

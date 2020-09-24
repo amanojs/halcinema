@@ -47,12 +47,14 @@
 					<div id="left_cont">
 						<% const date = new Date(runday) %>
 						<% const endPlas = new Date("2020-09-24" + " " + plas + ":00");
-							 endPlas.setHours(endPlas.getMinutes() + Number(runs))
+							 endPlas.setMinutes(endPlas.getMinutes() + Number(runs))
 						%>
 						<h2><%= String(date.getMonth() + 1).padStart(2,"0") %>/<%= String(date.getDate()).padStart(2,"0") %>
 						</h2>
 						<h3>『<%= movieName %>』</h3>
-						<p id="time"><%= plas %><span>~ 11:00</span></p>
+						<p id="time"><%= plas %><span>~
+								<%= String(endPlas.getHours()).padStart(2,"0") %>:<%= String(endPlas.getMinutes()).padStart(2,"0") %></span>
+						</p>
 					</div>
 					<div id="right_cont">
 						<div class="float">空席</div>
