@@ -1,11 +1,11 @@
 #buy_cont {
-  width: 800px;
+  width: 1280px;
   height: auto;
+  box-sizing: border-box;
   padding: 50px;
   margin: 100px auto;
-  background-color: #fff;
+  background-color: #f9f9f9;
   box-shadow: 2px 4px 8px #00000029;
-  border-radius: 30px;
 }
 #buy_cont h2 {
   width: 100%;
@@ -19,9 +19,9 @@
 }
 
 #buy_cont .buy_conts {
-  width: 760px;
+  width: 100%;
   height: 180px;
-  padding: 10px;
+  padding: 10px 0;
   margin-bottom: 10px;
   border-bottom: 0.5px solid #ddd;
 
@@ -33,13 +33,13 @@
   box-shadow: 2px 4px 8px #00000029;
 }
 #buy_cont .right_conts {
-  width: 610px;
+  width: 1000px;
   height: 180px;
 }
 #buy_cont .cinema {
-  width: 580px;
+  width: 100%;
   text-align: right;
-  color: #ddd;
+  color: #aaa;
   font-weight: 500;
 }
 #buy_cont .date {
@@ -80,7 +80,7 @@
   font-size: 1.4em;
 }
 #buy_cont .seatScreen {
-  width: 610px;
+  width: 100%;
   height: 30px;
   margin: 10px 0 0 0;
   list-style: none;
@@ -113,7 +113,7 @@
 }
 
 #buy_cont #cont_right {
-  width: 800px;
+  width: 100%;
 
   display: flex;
   justify-content: flex-end;
